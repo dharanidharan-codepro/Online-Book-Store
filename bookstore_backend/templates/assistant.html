@@ -1,0 +1,50 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Readora AI | Harbour Books{% endblock %}
+{% block body_class %}readora-page{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/readora.css' %}?v=8">
+{% endblock %}
+{% block content %}
+<div id="readora-effects" class="readora-effects" aria-hidden="true"></div>
+<div class="assistant-shell readora-shell">
+    <aside class="bookshelf-panel">
+        <div class="bookshelf-kicker"><span>✦</span> YOUR READING SIDEKICK</div>
+        <img class="bookshelf-logo" src="{% static 'img/readora-ai-logo.jpg' %}" alt="">
+        <h1 class="bookshelf-title">A little book magic, just for you.</h1>
+        <p class="bookshelf-copy">Tell Readora what you love and find your next can’t-put-it-down read.</p>
+        <a href="{% url 'books' %}" class="bookshelf-browse">Wander the bookshop <span aria-hidden="true">→</span></a>
+    </aside>
+    <section class="assistant-panel">
+        <div class="assistant-header">
+            <div class="readora-identity">
+                <img src="{% static 'img/readora-ai-logo.jpg' %}" alt="Readora AI logo" class="assistant-logo">
+                <div><h2>Readora AI</h2><span class="readora-status"><i></i> Ready to chat</span></div>
+            </div>
+            <a href="{% url 'books' %}" class="catalog-link">Explore books <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="chat-messages" role="log" aria-live="polite" aria-label="Conversation with Readora">
+            <div class="chat-intro"><span class="chat-date">A FRESH PAGE ✨</span><h3>Where shall we wander?</h3><p>Tell me your mood, a story you loved, or the kind of book you’re looking for.</p></div>
+            <div class="message assistant"><div class="avatar"><img src="{% static 'img/readora-ai-logo.jpg' %}" alt=""></div><div class="bubble">Hi, book lover! 📚 I’m Readora. I can help you find a book, compare prices, or pick something lovely to read. What are you in the mood for?</div></div>
+            <div class="prompt-list" aria-label="Try asking Readora">
+                <button type="button" class="prompt-chip">✨ A cosy feel-good read</button>
+                <button type="button" class="prompt-chip">🕵️ A gripping mystery</button>
+                <button type="button" class="prompt-chip">💸 Find books under ₹500</button>
+            </div>
+        </div>
+        <form id="assistant-form" class="assistant-form">
+            {% csrf_token %}
+            <label class="visually-hidden" for="assistant-input">Your message to Readora</label>
+            <textarea id="assistant-input" rows="1" placeholder="Tell me what you’d love to read…" autocomplete="off"></textarea>
+            <button type="submit" class="btn btn-navy" aria-label="Send message">Send <span aria-hidden="true">↗</span></button>
+        </form>
+        <p class="readora-footnote">A friendly reading companion, always ready to help ✦</p>
+    </section>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+    <script src="{% static 'js/readora-effects.js' %}?v=6"></script>
+{% endblock %}

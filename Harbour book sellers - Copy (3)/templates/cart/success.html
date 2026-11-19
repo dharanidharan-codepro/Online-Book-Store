@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Order Confirmed #{{ order.order_number }} | Harbour Books{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card bg-navy-card p-4 p-md-5 border-0 shadow-lg text-center"
+                style="border-radius: 24px; border: 1px solid rgba(255,255,255,0.12) !important; background: rgba(17, 26, 46, 0.85); backdrop-filter: blur(20px);">
+                <div class="success-icon mb-4"
+                    style="width: 72px; height: 72px; margin: 0 auto; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 28px rgba(16, 185, 129, 0.4);">
+                    <i class="bi bi-check-lg" style="font-size: 2.2rem; color: #fff;"></i>
+                </div>
+                <h1 class="display-6 fw-bold mb-2">Thank you for your order!</h1>
+                <p class="lead text-secondary mb-4">Your books are being carefully prepared and dispatched from Harbour
+                    Books.</p>
+
+                <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
+                    <div class="px-3 py-2 rounded-pill"
+                        style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);">
+                        <small class="text-muted d-block" style="font-size: 0.75rem;">ORDER NUMBER</small>
+                        <strong class="text-warning font-monospace">{{ order.order_number }}</strong>
+                    </div>
+                    <div class="px-3 py-2 rounded-pill"
+                        style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);">
+                        <small class="text-muted d-block" style="font-size: 0.75rem;">STATUS</small>
+                        <strong class="text-success text-capitalize"><i class="bi bi-circle-fill me-1"
+                                style="font-size: 0.5rem;"></i>{{ order.status }}</strong>
+                    </div>
+                    <div class="px-3 py-2 rounded-pill"
+                        style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);">
+                        <small class="text-muted d-block" style="font-size: 0.75rem;">TOTAL PAID</small>
+                        <strong class="text-light">₹{{ order.total }}</strong>
+                    </div>
+                </div>
+
+                {% if order.full_name %}
+                <div class="text-start p-3 mb-4 rounded-3"
+                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);">
+                    <h6 class="text-muted text-uppercase fw-bold mb-2" style="font-size: 0.8rem; letter-spacing: 1px;">
+                        Delivery Details</h6>
+                    <div class="text-light fw-medium">{{ order.full_name }}</div>
+                    {% if order.email %}<div class="text-secondary small">{{ order.email }}</div>{% endif %}
+                    {% if order.address %}<div class="text-secondary small mt-1"><i class="bi bi-geo-alt me-1"></i>{{
+                        order.address }}</div>{% endif %}
+                </div>
+                {% endif %}
+
+                <div class="table-responsive mb-4 text-start">
+                    <table class="table text-light mb-0" style="border-color: rgba(255,255,255,0.08);">
+                        <thead>
+                            <tr class="text-muted small text-uppercase">
+                                <th style="background: transparent;">Item</th>
+                                <th class="text-center" style="background: transparent;">Qty</th>
+                                <th class="text-end" style="background: transparent;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in items|default:order.items.all %}
+                            <tr>
+                                <td style="background: transparent;">
+                                    <div class="fw-semibold text-light">{{ row.title }}</div>
+                                    <small class="text-muted">₹{{ row.price }} each</small>
+                                </td>
+                                <td class="text-center align-middle" style="background: transparent;">{{ row.quantity }}
+                                </td>
+                                <td class="text-end align-middle fw-semibold text-warning"
+                                    style="background: transparent;">₹{{ row.subtotal }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-muted text-center py-3" style="background: transparent;">
+                                    Order items on record.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="2" class="text-light pt-3" style="background: transparent;">Total</th>
+                                <th class="text-end pt-3 text-warning fw-bold fs-5" style="background: transparent;">₹{{
+                                    order.total }}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="d-flex flex-wrap justify-content-center gap-3 pt-2">
+                    <a href="{% url 'books' %}" class="btn btn-amber px-4 py-2">
+                        <i class="bi bi-compass me-1"></i> Explore More Books
+                    </a>
+                    <a href="{% url 'assistant' %}" class="btn btn-outline-light px-4 py-2">
+                        <i class="bi bi-stars me-1"></i> Chat with Readora AI
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

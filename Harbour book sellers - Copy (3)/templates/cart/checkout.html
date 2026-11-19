@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Checkout | Harbour Books{% endblock %}
+{% block body_class %}checkout-page{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="cart-page-header mb-4">
+        <h1 class="cart-page-title">
+            <i class="bi bi-shield-check text-warning"></i>
+            <span>Secure Checkout</span>
+        </h1>
+        <a href="{% url 'cart' %}" class="cart-continue-link">
+            <i class="bi bi-arrow-left"></i>
+            <span>Back to Cart</span>
+        </a>
+    </div>
+
+    <!-- Stepper Indicator -->
+    <div class="checkout-stepper-wrap mb-4">
+        <div class="checkout-step completed">
+            <span class="step-num"><i class="bi bi-check"></i></span>
+            <span class="step-text">Cart</span>
+        </div>
+        <div class="step-connector completed"></div>
+        <div class="checkout-step active">
+            <span class="step-num">2</span>
+            <span class="step-text">Shipping & Contact</span>
+        </div>
+        <div class="step-connector"></div>
+        <div class="checkout-step">
+            <span class="step-num">3</span>
+            <span class="step-text">Order Placed</span>
+        </div>
+    </div>
+
+    <div class="cart-layout">
+        <!-- Left: Shipping & Details Form -->
+        <div class="cart-items-container">
+            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom"
+                style="border-color: rgba(255,255,255,0.08) !important;">
+                <h3 class="fs-5 fw-bold text-white mb-0">
+                    <i class="bi bi-geo-alt-fill text-warning me-2"></i>Delivery Address
+                </h3>
+                <span class="badge bg-success-subtle text-success small py-1 px-2">Demo Mode (No Real Card
+                    Required)</span>
+            </div>
+
+            <form method="post" action="{% url 'checkout' %}" class="checkout-form-grid">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="auth-field">
+                    <label class="auth-label" for="{{ field.id_for_label }}">
+                        {% if field.name == 'full_name' %}<i class="bi bi-person"></i>
+                        {% elif field.name == 'email' %}<i class="bi bi-envelope"></i>
+                        {% elif field.name == 'phone' %}<i class="bi bi-telephone"></i>
+                        {% elif field.name == 'address' %}<i class="bi bi-house-door"></i>{% endif %}
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="auth-field-error">{{ field.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="checkout-payment-box mt-3 mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="checkout-radio-pill active">
+                            <i class="bi bi-cash-stack text-warning fs-5"></i>
+                            <div>
+                                <div class="fw-bold text-white">Cash on Delivery / Direct Demo</div>
+                                <div class="small text-muted">Pay securely upon delivery with no extra fees</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-amber w-100 py-3 fw-bold fs-5 shadow-lg" type="submit">
+                    <span>Confirm & Place Order (₹{{ total }})</span>
+                    <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Right: Order Summary Sidebar -->
+        <aside class="cart-summary-sidebar">
+            <div class="cart-summary-header">
+                <i class="bi bi-bag-check"></i>
+                <h3>Items in Order ({{ cart.total_items|default:items|length }})</h3>
+            </div>
+
+            <div class="checkout-summary-list mb-3" style="max-height: 280px; overflow-y: auto;">
+                {% for item in items %}
+                <div class="d-flex align-items-center gap-3 py-2 border-bottom"
+                    style="border-color: rgba(255,255,255,0.06) !important;">
+                    <img src="{{ item.book.cover_url }}" alt="{{ item.book.title }}"
+                        style="width: 42px; height: 58px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);"
+                        onerror="this.onerror=null; this.src='/static/img/cover-placeholder.svg';">
+                    <div class="flex-grow-1 min-w-0">
+                        <div class="small fw-bold text-white text-truncate">{{ item.book.title }}</div>
+                        <div class="text-muted" style="font-size:0.75rem;">₹{{ item.book.price }} × {{ item.quantity }}
+                        </div>
+                    </div>
+                    <div class="text-warning fw-bold small">₹{{ item.subtotal }}</div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="cart-summary-row">
+                <span>Subtotal</span>
+                <strong class="text-white">₹{{ total }}</strong>
+            </div>
+
+            <div class="cart-summary-row">
+                <span>Shipping</span>
+                <span class="cart-summary-free-badge"><i class="bi bi-truck"></i> FREE</span>
+            </div>
+
+            <div class="cart-summary-total-box">
+                <div class="cart-summary-total-label">Total to Pay</div>
+                <div class="cart-summary-total-num">₹{{ total }}</div>
+            </div>
+
+            <div class="cart-trust-badges">
+                <div class="cart-trust-item">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    <span>Secure end-to-end order processing</span>
+                </div>
+                <div class="cart-trust-item">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Delivered in tamper-proof protective packaging</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+@media(max-width:991px){.nav-inner{gap:16px}.primary-links{gap:14px;font-size:12px}.brand-logo{width:112px}.nav-actions{gap:8px}.category-grid{grid-template-columns:repeat(3,1fr)}.book-grid{grid-template-columns:repeat(3,1fr)}.book-grid .cover-wrap{height:230px}.footer-grid{grid-template-columns:1.4fr 1fr 1fr;gap:28px}.footer-grid>div:last-child{display:none}.catalog-layout{grid-template-columns:190px 1fr;gap:22px}.detail-layout{gap:30px}.hero-inner{min-height:420px}}
+@media(max-width:767px){.announcement{font-size:10px}.site-nav{min-height:68px}.nav-inner{min-height:68px;justify-content:space-between;gap:9px}.brand-logo{width:100px;height:57px}.menu-toggle{display:block;order:-1}.primary-links{display:none;position:absolute;top:68px;left:0;right:0;background:#fff;border-bottom:1px solid var(--line);padding:12px 22px 18px;box-shadow:0 12px 20px #0000000d;align-items:stretch;gap:0}.primary-links.open{display:grid}.primary-links a{padding:10px 0;border-bottom:1px solid #f1f2f2}.nav-actions{gap:3px}.nav-actions .account-link{display:none}.hero-inner{grid-template-columns:1fr;min-height:unset;padding-top:60px;padding-bottom:34px;gap:0}.hero h1{font-size:46px}.hero-art{height:300px;margin-top:15px}.hero-book{width:176px;height:245px;padding:21px}.hero-book strong{font-size:25px;margin:31px 0 17px}.book-float{width:125px;height:180px;transform:rotate(-11deg) translate(-73px,35px)}.book-float b{font-size:18px;margin-top:34px}.art-orbit{width:280px;height:280px}.section{padding:55px 0}.section-head{align-items:start}.section-title{font-size:30px}.category-grid{grid-template-columns:repeat(2,1fr);gap:10px}.category-tile{padding:17px 9px}.book-grid{grid-template-columns:repeat(2,1fr);gap:22px 12px}.book-grid .cover-wrap{height:215px}.book-cover{width:125px;height:173px;padding:14px 10px}.book-cover strong{font-size:17px}.book-grid .book-title{font-size:15px}.book-grid .book-bottom{align-items:flex-start;gap:5px}.add-cart{padding:6px 7px}.service-grid{grid-template-columns:1fr;gap:16px}.service{justify-content:flex-start}.readora-panel{grid-template-columns:1fr;padding:29px 23px;gap:20px}.readora-panel h2{font-size:30px}.readora-mark{grid-row:1;height:110px;width:110px;justify-self:start}.newsletter-inner{align-items:flex-start;flex-direction:column}.newsletter-form{max-width:none}.footer-grid{grid-template-columns:1fr 1fr;gap:25px}.footer-grid>div:first-child{grid-column:1/-1}.footer-grid>div:last-child{display:block}.footer-bottom{flex-direction:column}.page-banner{padding:38px 0}.catalog-layout{grid-template-columns:1fr}.filter-panel{display:none}.filter-panel.mobile-open{display:block}.catalog-toolbar{flex-wrap:wrap}.catalog-toolbar>div{width:100%;display:flex;justify-content:space-between;gap:8px}.catalog-search{flex:1}.catalog-search input{width:100%}.detail-layout{grid-template-columns:1fr;gap:25px}.detail-cover{min-height:340px}.detail-cover .book-cover{width:195px;height:275px}.detail-copy h1{font-size:34px}.cart-layout{grid-template-columns:1fr}.cart-table th:nth-child(2),.cart-table td:nth-child(2){display:none}.cart-table th,.cart-table td{padding:11px 6px}.cart-book{min-width:160px}.admin-stats{grid-template-columns:repeat(2,1fr)}.admin-table-wrap{overflow-x:auto}.admin-table{min-width:650px}.chat-messages{height:360px;padding:15px}.chat-message{max-width:90%}.chat-head{padding:12px 14px}.form-shell{padding:25px 20px}.hero .btn-outline-custom{margin:9px 0 0}.search-wrap{flex-wrap:wrap}.search-wrap input{width:60%}.search-wrap button{padding:0 14px}}
+@media(max-width:390px){.book-grid .cover-wrap{height:190px}.book-cover{width:110px;height:155px}.book-cover strong{font-size:15px}.book-price{font-size:13px}.footer-grid{gap:18px}.hero h1{font-size:39px}}
+#ambient-background{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;isolation:isolate}
+body{background-color:var(--ambient-soft,#fff);background-image:radial-gradient(ellipse at 9% 17%,color-mix(in srgb,var(--ambient-accent,#08b7c4) 9%,transparent),transparent 38%),radial-gradient(ellipse at 91% 67%,color-mix(in srgb,var(--ambient-bright,#08b7c4) 12%,transparent),transparent 42%);background-attachment:fixed}
+.hero-ambient{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;isolation:isolate}
+.hero .ambient-particle{color:#78e4e6;opacity:.5}
+.hero .ambient-sparkle{color:#c4f7f1}
+.hero .ambient-orb{border-color:#67e6e4}
+.hero .ambient-book{color:#70d7de;opacity:.4}
+.site-nav{position:sticky;z-index:50}
+#app,#site-footer{position:relative;z-index:1}
+.section-soft{background:color-mix(in srgb,var(--ambient-soft,#fbf9f4) 84%,white)}
+.newsletter{background:color-mix(in srgb,var(--ambient-soft,#eaf8f7) 72%,white)}
+.page-banner{background:color-mix(in srgb,var(--ambient-soft,#fbf9f4) 83%,white)}
+.form-shell,.summary-card,.filter-panel,.stat-card{background:color-mix(in srgb,var(--ambient-soft,#fff) 25%,white)}
+.btn-primary-custom,.newsletter-form button,.chat-compose button{background:var(--ambient-accent,#08b7c4);border-color:var(--ambient-accent,#08b7c4)}
+.btn-primary-custom:hover{background:var(--ambient-bright,#28d1d4);border-color:var(--ambient-bright,#28d1d4)}
+body[data-page="readora"] .chat-head{background:linear-gradient(115deg,#282057,#344995,#12677a)}
+body[data-page="readora"] .chat-messages{background:linear-gradient(145deg,#f4f2ff,#f0faff)}
+body[data-page="readora"] .chat-message.bot{border-left:3px solid #7360e8}
+body[data-page="readora"] .suggested-prompts button{border-color:#cbc4fb;color:#5748b4}
+body[data-page="login"] .form-shell{border-top:3px solid #7461bd;box-shadow:0 18px 50px rgba(91,71,157,.13)}
+body[data-page="login"] .form-shell h1{color:#514588}
+body[data-page="register"] .form-shell{border-top:3px solid #318a9c;box-shadow:0 18px 50px rgba(49,138,156,.12)}
+body[data-page="register"] .form-shell h1{color:#286f7d}
+body[data-page="admin"] .admin-tabs{border-bottom-color:color-mix(in srgb,var(--ambient-accent) 30%,white)}
+body[data-page="admin"] .admin-tab.active{color:var(--ambient-accent);border-bottom-color:var(--ambient-accent)}
+body[data-page="offers"] .cover-label{background:#bd4059}
+body[data-page="checkout"] .summary-card{border-top:3px solid #3f9276}
+body[data-page="cart"] .summary-card{border-top:3px solid #a77a2f}
+body[data-page="confirmation"] .form-shell{border-top:3px solid #368b66}
+.hero-inner{z-index:1}
+.ambient-glow{position:absolute;width:290px;height:290px;border-radius:50%;filter:blur(2px);opacity:.48;background:radial-gradient(circle,var(--ambient-glow-one,rgba(8,183,196,.38)),transparent 68%);animation:ambient-drift 16s ease-in-out infinite alternate}
+.ambient-glow-one{left:10%;top:16%}
+.ambient-glow-two{right:8%;bottom:0;background:radial-gradient(circle,var(--ambient-glow-two,rgba(91,139,255,.3)),transparent 68%);animation-delay:-8s}
+.ambient-particle{position:absolute;display:grid;place-items:center;color:var(--ambient-accent,#078c99);opacity:.42;animation:ambient-drift var(--float-duration) ease-in-out var(--float-delay) infinite alternate;will-change:transform}
+.ambient-sparkle{color:var(--ambient-bright,#08aab2);text-shadow:0 0 13px color-mix(in srgb,var(--ambient-accent,#08b7c4) 55%,transparent);animation-name:ambient-twinkle,ambient-drift;animation-duration:2.8s,var(--float-duration);animation-timing-function:ease-in-out,ease-in-out;animation-delay:var(--float-delay),var(--float-delay);animation-iteration-count:infinite,infinite;animation-direction:alternate,alternate}
+.ambient-orb{width:7px;height:7px;border:1px solid var(--ambient-bright,#08aab2);border-radius:50%;box-shadow:0 0 13px color-mix(in srgb,var(--ambient-accent,#08b7c4) 55%,transparent)}
+.ambient-book{color:var(--ambient-accent,#078c99);opacity:.32;transform:rotate(-18deg);text-shadow:0 0 14px color-mix(in srgb,var(--ambient-accent,#08b7c4) 45%,transparent)}
+@keyframes ambient-drift{0%{translate:0 18px;rotate:-9deg}50%{translate:12px -23px;rotate:9deg}100%{translate:-8px 15px;rotate:-4deg}}
+@keyframes ambient-twinkle{0%{opacity:.18;scale:.72}100%{opacity:.85;scale:1.15}}
+@media(max-width:767px){.ambient-glow{width:180px;height:180px}.ambient-particle{opacity:.24}.ambient-book{opacity:.2}}
+@media(prefers-reduced-motion:reduce){.ambient-glow,.ambient-particle{animation:none!important;will-change:auto}}

@@ -1,0 +1,22 @@
+{
+    "include": [
+        "Harbour book sellers - Copy (3)",
+        "bookstore_backend"
+    ],
+    "extraPaths": [
+        "Harbour book sellers - Copy (3)",
+        "bookstore_backend"
+    ],
+    "pythonPath": "C:\\Users\\Dharanidharan\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "reportMissingImports": "none"
+    "typeCheckingMode": "off",
+    "reportMissingImports": "none",
+    "reportMissingModuleSource": "none",
+    "reportAttributeAccessIssue": "none",
+    "reportAssignmentType": "none",
+    "reportOptionalMemberAccess": "none",
+    "reportGeneralTypeIssues": "none",
+    "reportIncompatibleVariableOverride": "none",
+    "reportFunctionMemberAccess": "none",
+    "reportPrivateImportUsage": "none"
+}

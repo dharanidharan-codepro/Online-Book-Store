@@ -1,0 +1,117 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block title %}Your Cart | Harbour Books{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom"
+        style="border-color: rgba(255,255,255,0.1) !important;">
+        <h1 class="display-6 fw-bold text-light mb-0">
+            Shopping Cart <span class="badge bg-secondary rounded-pill ms-2 fs-6">{{ cart.total_items }}</span>
+        </h1>
+        <a href="{% url 'store:book_list' %}" class="btn btn-sm btn-outline-light rounded-pill px-3">
+            ← Continue Browsing
+        </a>
+    </div>
+
+    {% if items %}
+    <div class="row g-5">
+        <!-- Cart Items List -->
+        <div class="col-lg-8">
+            <div class="rounded-4 overflow-hidden shadow-sm"
+                style="background: rgba(17, 26, 46, 0.72); border: 1px solid rgba(255,255,255,0.1);">
+                <div class="table-responsive">
+                    <table class="table text-light mb-0 align-middle">
+                        <thead class="text-uppercase small text-muted border-bottom"
+                            style="border-color: rgba(255,255,255,0.08) !important;">
+                            <tr>
+                                <th class="ps-4 py-3" style="background: transparent;">Book</th>
+                                <th class="py-3" style="background: transparent;">Price</th>
+                                <th class="py-3" style="background: transparent;">Quantity</th>
+                                <th class="py-3 text-end" style="background: transparent;">Subtotal</th>
+                                <th class="pe-4 py-3" style="background: transparent;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr class="border-bottom" style="border-color: rgba(255,255,255,0.06) !important;">
+                                <td class="ps-4 py-3" style="background: transparent;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <a href="{{ item.book.get_absolute_url }}" class="flex-shrink-0">
+                                            <img src="{{ item.book.cover_url }}" alt="{{ item.book.title }}"
+                                                style="width: 52px; aspect-ratio: 2/3; object-fit: cover; border-radius: 6px;">
+                                        </a>
+                                        <div>
+                                            <a href="{{ item.book.get_absolute_url }}"
+                                                class="fw-semibold text-light text-decoration-none">
+                                                {{ item.book.title }}
+                                            </a>
+                                            <div class="small text-muted">by {{ item.book.author }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-3" style="background: transparent;">₹{{ item.book.price }}</td>
+                                <td class="py-3" style="background: transparent;">
+                                    <form method="post" action="{% url 'store:cart_update' item.id %}"
+                                        class="d-flex align-items-center gap-1">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="0"
+                                            max="{{ item.book.stock }}"
+                                            class="form-control form-control-sm text-center text-light"
+                                            style="width: 60px; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15);">
+                                        <button type="submit" class="btn btn-sm btn-outline-light px-2"
+                                            title="Update">↻</button>
+                                    </form>
+                                </td>
+                                <td class="py-3 text-end fw-bold text-warning" style="background: transparent;">₹{{
+                                    item.subtotal }}</td>
+                                <td class="pe-4 py-3 text-end" style="background: transparent;">
+                                    <form method="post" action="{% url 'store:cart_remove' item.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger px-2"
+                                            title="Remove"><i class="bi bi-trash3"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary Sidebar -->
+        <div class="col-lg-4">
+            <div class="rounded-4 p-4 shadow-sm"
+                style="background: rgba(17, 26, 46, 0.85); border: 1px solid rgba(255,255,255,0.12);">
+                <h4 class="fw-bold text-light mb-3">Order Summary</h4>
+                <div class="d-flex justify-content-between text-secondary mb-2">
+                    <span>Items Subtotal</span>
+                    <span class="text-light fw-semibold">₹{{ total }}</span>
+                </div>
+                <div class="d-flex justify-content-between text-secondary mb-3">
+                    <span>Delivery</span>
+                    <span class="text-success fw-semibold">FREE</span>
+                </div>
+                <hr style="border-color: rgba(255,255,255,0.12);">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <span class="fs-5 text-light fw-bold">Total Amount</span>
+                    <span class="fs-4 text-warning fw-bold">₹{{ total }}</span>
+                </div>
+                <a href="{% url 'store:checkout' %}" class="btn btn-amber w-100 py-3 rounded-pill fw-bold fs-6">
+                    Proceed to Checkout →
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5 my-5">
+        <i class="bi bi-cart-x text-muted display-1"></i>
+        <h3 class="text-light mt-3">Your cart is currently empty</h3>
+        <p class="text-muted">Explore our collection of hand-picked titles and AI-summarized books.</p>
+        <a href="{% url 'store:book_list' %}" class="btn btn-amber rounded-pill px-4 py-2 mt-2">
+            Discover Books
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

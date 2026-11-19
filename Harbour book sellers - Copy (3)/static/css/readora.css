@@ -1,0 +1,499 @@
+.readora-shell {
+    --readora-violet: #7657e8;
+    --readora-blue: #39c8ed;
+    --readora-pink: #ff8db9;
+    --readora-gold: #ffd46e;
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: minmax(240px, 340px) minmax(0, 1fr);
+    width: min(1440px, calc(100% - 2rem));
+    height: min(760px, calc(100svh - 130px));
+    min-height: 600px;
+    margin: 1.25rem auto;
+    overflow: hidden;
+    border: 1px solid rgba(118, 87, 232, .14);
+    border-radius: 30px;
+    background:
+        radial-gradient(ellipse at 4% 0%, rgba(255, 212, 110, .28), transparent 35%),
+        radial-gradient(ellipse at 100% 100%, rgba(57, 200, 237, .2), transparent 38%),
+        linear-gradient(135deg, #f8f4ff 0%, #effbff 52%, #fff7f2 100%);
+    box-shadow: 0 24px 80px rgba(58, 48, 119, .14);
+}
+.readora-effects {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+.readora-effects::before,
+.readora-effects::after {
+    position: absolute;
+    top: 10%;
+    left: 6%;
+    color: rgba(118, 87, 232, .55);
+    content: "✦  ·  ✧  ·  ✦";
+    font-size: 1.2rem;
+    letter-spacing: 1.2rem;
+    animation: readora-float 9s ease-in-out infinite;
+}
+.readora-effects::after {
+    top: auto;
+    right: 8%;
+    bottom: 15%;
+    left: auto;
+    color: rgba(255, 151, 91, .55);
+    content: "✧  ·  ✦";
+    animation-delay: -4s;
+}
+.readora-effects.has-react-scene::before,
+.readora-effects.has-react-scene::after { display: none; }
+.readora-glow {
+    position: absolute;
+    width: 19rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    filter: blur(3px);
+    opacity: .58;
+    animation: readora-glow 12s ease-in-out infinite alternate;
+}
+.readora-glow-one {
+    top: 13%;
+    left: 20%;
+    background: radial-gradient(circle, rgba(184, 151, 255, .4), rgba(184, 151, 255, 0) 70%);
+}
+.readora-glow-two {
+    right: -4rem;
+    bottom: -6rem;
+    background: radial-gradient(circle, rgba(95, 221, 232, .35), rgba(95, 221, 232, 0) 70%);
+    animation-delay: -6s;
+}
+.readora-particle {
+    position: absolute;
+    left: var(--particle-x);
+    top: var(--particle-y);
+    display: grid;
+    width: var(--particle-size);
+    height: var(--particle-size);
+    place-items: center;
+    color: var(--particle-color);
+    font-size: calc(var(--particle-size) * .8);
+    line-height: 1;
+    opacity: .82;
+    filter: drop-shadow(0 4px 8px rgba(91, 80, 155, .16));
+    animation: readora-float var(--particle-duration) ease-in-out var(--particle-delay) infinite;
+    will-change: transform;
+}
+.readora-particle-orb {
+    border-radius: 50%;
+    background: var(--particle-color);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--particle-color), transparent 45%);
+}
+.readora-particle-book {
+    border-radius: 5px 9px 9px 5px;
+    background: linear-gradient(135deg, var(--particle-color), color-mix(in srgb, var(--particle-color), white 35%));
+    box-shadow: inset 3px 0 rgba(255,255,255,.65), 0 4px 10px rgba(71, 56, 141, .12);
+    transform: rotate(-12deg);
+}
+.bookshelf-panel {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 0;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    overflow: hidden;
+    border: 0;
+    border-right: 1px solid rgba(118, 87, 232, .12);
+    background: linear-gradient(155deg, rgba(117, 83, 231, .95), rgba(77, 104, 224, .94) 55%, rgba(50, 174, 212, .91));
+    color: white;
+}
+.bookshelf-panel::before,
+.bookshelf-panel::after {
+    position: absolute;
+    right: -4rem;
+    bottom: 10%;
+    width: 16rem;
+    aspect-ratio: 1;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 50%;
+    content: "";
+}
+.bookshelf-panel::after {
+    right: -2rem;
+    bottom: 4%;
+    width: 12rem;
+    border-color: rgba(255,255,255,.12);
+}
+.bookshelf-kicker {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem .75rem;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 99px;
+    background: rgba(255,255,255,.12);
+    font-size: .67rem;
+    font-weight: 800;
+    letter-spacing: .11em;
+}
+.bookshelf-kicker span { color: var(--readora-gold); }
+.bookshelf-logo {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 148px);
+    aspect-ratio: 1;
+    margin: 1rem auto .75rem;
+    border: 4px solid rgba(255,255,255,.42);
+    border-radius: 28px;
+    object-fit: cover;
+    box-shadow: 0 16px 35px rgba(26, 24, 90, .25);
+    animation: readora-bob 5s ease-in-out infinite;
+}
+.bookshelf-title {
+    position: relative;
+    z-index: 1;
+    margin: .25rem 0 .7rem;
+    color: white;
+    font-size: clamp(1.75rem, 2.6vw, 2.15rem);
+    line-height: 1.08;
+}
+.bookshelf-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 28rem;
+    margin: 0;
+    color: rgba(255,255,255,.86);
+    line-height: 1.7;
+}
+.bookshelf-browse {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: .7rem;
+    margin-top: auto;
+    padding: .8rem 1rem;
+    border-radius: 99px;
+    background: white;
+    color: #5c49ca;
+    font-size: .88rem;
+    font-weight: 800;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.bookshelf-browse:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(30, 24, 95, .2); color: #4933b7; }
+.assistant-panel {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    margin: 1rem;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.82);
+    border-radius: 24px;
+    background: rgba(255,255,255,.8);
+    box-shadow: 0 12px 45px rgba(75, 74, 142, .09);
+    backdrop-filter: blur(16px);
+}
+.assistant-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 0 0 auto;
+    padding: 1rem clamp(1rem, 3vw, 1.75rem);
+    border-bottom: 1px solid rgba(118, 87, 232, .1);
+    background: rgba(255,255,255,.72);
+}
+.readora-identity { display: flex; min-width: 0; align-items: center; gap: .8rem; }
+.assistant-logo {
+    width: 54px;
+    height: 54px;
+    flex: 0 0 54px;
+    border: 2px solid white;
+    border-radius: 17px;
+    object-fit: cover;
+    box-shadow: 0 5px 16px rgba(91, 80, 155, .16);
+}
+.assistant-header h2 { margin: 0; color: #342c67; font-size: 1.15rem; }
+.readora-status { display: inline-flex; align-items: center; gap: .4rem; margin-top: .2rem; color: #68708a; font-size: .72rem; }
+.readora-status i { width: 7px; height: 7px; border-radius: 50%; background: #35c88b; box-shadow: 0 0 0 4px rgba(53,200,139,.13); }
+.catalog-link {
+    padding: .65rem .9rem;
+    border: 1px solid rgba(118,87,232,.16);
+    border-radius: 99px;
+    background: #f6f3ff;
+    color: #5c49ca;
+    font-size: .8rem;
+    font-weight: 750;
+    transition: transform .2s ease, background .2s ease;
+}
+.catalog-link:hover { transform: translateY(-1px); background: #ece6ff; color: #4933b7; }
+.chat-messages {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
+    padding: clamp(1rem, 3vw, 2rem);
+    gap: 1rem;
+    background: radial-gradient(ellipse at 90% 15%, rgba(218, 239, 255, .3), transparent 40%);
+}
+.chat-intro { max-width: 40rem; margin: 0 auto .25rem; text-align: center; }
+.chat-date { color: #8e75dc; font-size: .67rem; font-weight: 850; letter-spacing: .15em; }
+.chat-intro h3 { margin: .45rem 0 .35rem; color: #393267; font-size: clamp(1.45rem, 3vw, 2rem); }
+.chat-intro p { max-width: 32rem; margin: 0 auto; color: #747b91; font-size: .9rem; line-height: 1.6; }
+.message { position: relative; z-index: 1; display: flex; align-items: flex-start; gap: 0.7rem; animation: readora-message-in .4s cubic-bezier(.2,.8,.2,1) both; }
+.message.user { flex-direction: row-reverse; }
+.message .bubble {
+    max-width: min(78%, 38rem);
+    padding: .9rem 1rem;
+    border: 1px solid rgba(125, 100, 220, .1);
+    border-radius: 6px 19px 19px 19px;
+    background: white;
+    color: #42465f;
+    line-height: 1.6;
+    box-shadow: 0 8px 22px rgba(76, 67, 135, .08);
+}
+.message.user .bubble {
+    border: 0;
+    border-radius: 19px 6px 19px 19px;
+    background: linear-gradient(135deg, #7657e8, #4f8de7);
+    color: white;
+}
+.avatar {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid white;
+    background: #ece8ff;
+    box-shadow: 0 4px 12px rgba(76, 67, 135, .12);
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.prompt-list { display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; padding: .25rem 0 .75rem; }
+.prompt-chip {
+    padding: .58rem .8rem;
+    border: 1px solid rgba(118,87,232,.17);
+    border-radius: 99px;
+    background: rgba(255,255,255,.8);
+    color: #5b5284;
+    font: inherit;
+    font-size: .77rem;
+    font-weight: 650;
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.prompt-chip:hover { transform: translateY(-2px); border-color: rgba(118,87,232,.5); box-shadow: 0 7px 16px rgba(87,71,164,.12); }
+.assistant-form {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    padding: .9rem clamp(.85rem, 2vw, 1.4rem);
+    border-top: 1px solid rgba(118, 87, 232, .1);
+    background: rgba(255,255,255,.88);
+}
+.assistant-form textarea {
+    flex: 1;
+    min-height: 48px;
+    max-height: 120px;
+    padding: .8rem 1rem;
+    border: 1px solid rgba(118,87,232,.19);
+    border-radius: 16px;
+    background: #fbfaff;
+    color: #353052;
+    resize: vertical;
+}
+.assistant-form textarea:focus { border-color: #8b73eb; outline: 3px solid rgba(118,87,232,.12); }
+.assistant-form .btn {
+    flex: 0 0 auto;
+    padding: .78rem 1rem;
+    border: 0;
+    background: linear-gradient(135deg, #7657e8, #4f8de7);
+    box-shadow: 0 7px 16px rgba(99, 82, 205, .22);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+.assistant-form .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 21px rgba(99, 82, 205, .3); }
+.readora-footnote { flex: 0 0 auto; margin: 0; padding: 0 .75rem .7rem; background: rgba(255,255,255,.88); color: #85899a; font-size: .68rem; text-align: center; }
+@keyframes readora-float {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg); }
+    50% { transform: translate3d(12px, -22px, 0) rotate(12deg); }
+}
+@keyframes readora-glow {
+    from { transform: translate3d(-15px, 8px, 0) scale(.9); }
+    to { transform: translate3d(22px, -18px, 0) scale(1.15); }
+}
+@keyframes readora-bob {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+}
+@keyframes readora-message-in {
+    from { opacity: 0; transform: translateY(10px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (max-width: 768px) {
+    .readora-shell { grid-template-columns: minmax(0, 1fr); width: calc(100% - 1rem); height: min(720px, calc(100svh - 110px)); min-height: 520px; margin: .5rem auto; border-radius: 22px; }
+    .readora-shell .bookshelf-panel { display: none; }
+    .readora-shell .assistant-panel { margin: .55rem; border-radius: 19px; }
+    .readora-shell .assistant-header { gap: .55rem; padding: .75rem; }
+    .readora-shell .assistant-logo { width: 46px; height: 46px; flex-basis: 46px; border-radius: 14px; }
+    .readora-shell .assistant-header h2 { font-size: 1rem; }
+    .readora-shell .catalog-link { padding: .55rem .65rem; font-size: .72rem; }
+    .readora-shell .chat-messages { padding: 1rem .75rem; }
+    .readora-shell .chat-intro h3 { font-size: 1.45rem; }
+    .readora-shell .chat-intro p { font-size: .82rem; }
+    .readora-shell .message { gap: .5rem; }
+    .readora-shell .message .bubble { max-width: 84%; padding: .75rem; font-size: .9rem; }
+    .readora-shell .prompt-list { gap: .4rem; }
+    .readora-shell .prompt-chip { padding: .5rem .65rem; font-size: .7rem; }
+    .readora-shell .assistant-form { gap: .45rem; padding: .7rem; }
+    .readora-shell .assistant-form .btn { padding: .75rem .8rem; font-size: .82rem; }
+    .readora-shell .readora-footnote { font-size: .62rem; }
+    .readora-particle { opacity: .58; }
+}
+@media (max-width: 768px) and (max-height: 650px) {
+    .readora-shell { height: 520px; min-height: 520px; }
+}
+@media (max-width: 360px) {
+    .readora-shell .assistant-header { align-items: flex-start; }
+    .readora-shell .assistant-logo { width: 40px; height: 40px; flex-basis: 40px; }
+    .readora-shell .catalog-link { padding: .5rem; font-size: .68rem; }
+    .readora-shell .chat-messages { padding: .75rem .55rem; }
+    .readora-shell .chat-intro h3 { font-size: 1.25rem; }
+    .readora-shell .prompt-chip { font-size: .66rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .readora-effects *, .readora-shell .bookshelf-logo, .readora-shell .message { animation: none !important; scroll-behavior: auto !important; }
+    .readora-shell *, .readora-shell *::before, .readora-shell *::after { transition-duration: .01ms !important; }
+}
+body.readora-page {
+    --navy: #18304f;
+    --amber: #f5a623;
+    --amber-text: #9a5b00;
+    background: #faf7f1;
+    color: #18304f;
+}
+body.readora-page #main-content {
+    position: relative;
+    isolation: isolate;
+    overflow: visible;
+    background:
+        radial-gradient(ellipse at 12% 12%, rgba(245,166,35,.08), transparent 32%),
+        radial-gradient(ellipse at 88% 82%, rgba(24,48,79,.06), transparent 34%),
+        #faf7f1;
+}
+body.readora-page .readora-effects {
+    position: fixed;
+    z-index: 0;
+    inset: 72px 0 0;
+}
+.readora-shell {
+    z-index: 1;
+    --readora-violet: #f5a623;
+    --readora-blue: #f5a623;
+    --readora-pink: #ffd27a;
+    --readora-gold: #ffd27a;
+    border-color: rgba(24,48,79,.12);
+    background:
+        radial-gradient(ellipse at 4% 0%, rgba(245,166,35,.12), transparent 35%),
+        radial-gradient(ellipse at 100% 100%, rgba(24,48,79,.08), transparent 38%),
+        linear-gradient(135deg, #fffaf3 0%, #f5f1e9 52%, #f5f7f8 100%);
+    box-shadow: 0 24px 80px rgba(24,48,79,.14);
+}
+.readora-effects::before,
+.readora-effects::after { color: rgba(245,166,35,.5); }
+.readora-glow-one {
+    background: radial-gradient(circle, rgba(245,166,35,.18), rgba(245,166,35,0) 70%);
+}
+.readora-glow-two {
+    background: radial-gradient(circle, rgba(24,48,79,.12), rgba(24,48,79,0) 70%);
+}
+.readora-particle { filter: drop-shadow(0 4px 8px rgba(24,48,79,.16)); }
+.bookshelf-panel {
+    border-right-color: rgba(255,255,255,.2);
+    background: linear-gradient(155deg, #18304f, #1d3555 58%, #172a45);
+}
+.bookshelf-panel::before { border-color: rgba(255,255,255,.2); }
+.bookshelf-panel::after { border-color: rgba(255,255,255,.12); }
+.bookshelf-kicker {
+    border-color: rgba(255,255,255,.24);
+    background: rgba(255,255,255,.08);
+}
+.bookshelf-kicker span { color: #ffd27a; }
+.bookshelf-browse {
+    background: linear-gradient(110deg, #f5a623, #ffd27a);
+    color: #18304f;
+}
+.bookshelf-browse:hover { color: #18304f; }
+.assistant-panel {
+    border-color: rgba(255,255,255,.82);
+    background: rgba(255,255,255,.82);
+    box-shadow: 0 12px 45px rgba(24,48,79,.09);
+}
+.assistant-header,
+.assistant-form,
+.readora-footnote {
+    border-color: rgba(24,48,79,.1);
+    background: rgba(255,255,255,.82);
+}
+.assistant-logo,
+.avatar { border-color: #fff; }
+.assistant-header h2,
+.chat-intro h3 { color: #18304f; }
+.readora-status,
+.chat-intro p { color: #687589; }
+.readora-status i { background: #35c88b; box-shadow: 0 0 0 4px rgba(53,200,139,.13); }
+.catalog-link {
+    border-color: rgba(24,48,79,.16);
+    background: #fff0cc;
+    color: #18304f;
+}
+.catalog-link:hover { background: #ffe6a6; color: #18304f; }
+.chat-messages {
+    background:
+        radial-gradient(ellipse at 90% 15%, rgba(245,166,35,.08), transparent 40%),
+        #fffdf9;
+}
+.chat-date { color: #9a5b00; }
+.message .bubble {
+    border-color: rgba(24,48,79,.1);
+    background: #fff;
+    color: #424b5b;
+    box-shadow: 0 8px 22px rgba(24,48,79,.08);
+}
+.message.user .bubble {
+    background: linear-gradient(135deg, #18304f, #29496b);
+    color: #fff;
+}
+.avatar { background: #fff0cc; }
+.prompt-chip {
+    border-color: rgba(24,48,79,.16);
+    background: rgba(255,255,255,.9);
+    color: #18304f;
+}
+.prompt-chip:hover {
+    border-color: rgba(245,166,35,.65);
+    box-shadow: 0 7px 16px rgba(24,48,79,.12);
+}
+.assistant-form textarea {
+    border-color: rgba(24,48,79,.18);
+    background: #fff;
+    color: #18304f;
+}
+.assistant-form textarea::placeholder { color: #758092; }
+.assistant-form textarea:focus {
+    border-color: #f5a623;
+    outline-color: rgba(245,166,35,.2);
+}
+.assistant-form .btn {
+    background: #18304f;
+    color: #fff;
+    box-shadow: 0 7px 16px rgba(24,48,79,.2);
+}
+.assistant-form .btn:hover { background: #29496b; box-shadow: 0 10px 21px rgba(24,48,79,.24); }
+.readora-footnote { color: #758092; }

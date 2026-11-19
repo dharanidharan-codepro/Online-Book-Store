@@ -1,0 +1,109 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Catalog | Harbour Books{% endblock %}
+{% block body_class %}catalog-page{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="catalog-header">
+        <div class="catalog-title">
+            <h1>Books</h1>
+            <p class="catalog-count-pill">{% if q %}<span>{{ count }}</span> results for “{{ q }}”{% else %}<span>{{ count }}</span> books available{% endif %}</p>
+        </div>
+        <form method="get" action="{% url 'books' %}" class="catalog-search-form">
+            <div class="catalog-search-wrap">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" name="q" value="{{ q }}" placeholder="Search title, author, or ISBN…">
+                {% if q %}
+                    <a href="{% url 'books' %}" class="search-clear-btn" aria-label="Clear search"><i class="bi bi-x-lg"></i></a>
+                {% endif %}
+            </div>
+            <input type="hidden" name="sort" value="{{ sort }}">
+            {% if deep_search %}<input type="hidden" name="deep_search" value="1">{% endif %}
+        </form>
+    </div>
+    <div class="catalog-layout">
+        <aside class="catalog-sidebar">
+            <div class="sidebar-header">
+                <h4><i class="bi bi-sliders2"></i> Filter Catalog</h4>
+            </div>
+            <form method="get" action="{% url 'books' %}">
+                <input type="hidden" name="q" value="{{ q }}">
+                {% if deep_search %}<input type="hidden" name="deep_search" value="1">{% endif %}
+                <details class="mb-3 catalog-category-filter" open>
+                    <summary><i class="bi bi-tags"></i> Category</summary>
+                    <div class="catalog-category-options">
+                        {% for category in categories %}
+                            <label class="catalog-category-option">
+                                <input type="checkbox" name="category" value="{{ category.slug }}" {% if category.slug in selected_categories %}checked{% endif %}>
+                                <span>{{ category.name }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </details>
+                <div class="filter-group mb-3">
+                    <label class="filter-label"><i class="bi bi-currency-rupee"></i> Price Range</label>
+                    <div class="price-inputs-row">
+                        <div class="input-prefix-box">
+                            <span>₹</span>
+                            <input type="number" step="1" name="min_price" value="{{ request.GET.min_price }}" placeholder="Min" class="form-control">
+                        </div>
+                        <span class="price-range-sep">to</span>
+                        <div class="input-prefix-box">
+                            <span>₹</span>
+                            <input type="number" step="1" name="max_price" value="{{ request.GET.max_price }}" placeholder="Max" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-group mb-3">
+                    <label class="filter-label"><i class="bi bi-bookmark-check"></i> Condition</label>
+                    <div class="condition-options">
+                        <label class="condition-check">
+                            <input type="checkbox" name="condition" value="new" {% if 'new' in request.GET.getlist.condition %}checked{% endif %}>
+                            <span>New</span>
+                        </label>
+                        <label class="condition-check">
+                            <input type="checkbox" name="condition" value="used_good" {% if 'used_good' in request.GET.getlist.condition %}checked{% endif %}>
+                            <span>Used</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="filter-group mb-3">
+                    <label class="filter-label"><i class="bi bi-sort-down"></i> Sort By</label>
+                    <select name="sort" class="form-select modern-select">
+                        <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+                        <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price low to high</option>
+                        <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price high to low</option>
+                        <option value="featured" {% if sort == 'featured' %}selected{% endif %}>Featured</option>
+                        <option value="title" {% if sort == 'title' %}selected{% endif %}>Title A–Z</option>
+                    </select>
+                </div>
+                <button class="btn btn-amber w-100 filter-apply-btn" type="submit">
+                    <i class="bi bi-check2"></i> Apply Filters
+                </button>
+            </form>
+        </aside>
+        <div class="catalog-content">
+            {% if books %}
+                <div class="book-grid catalog-grid">
+                    {% for book in books %}
+                        {% include 'catalog/_book_card.html' %}
+                    {% endfor %}
+                </div>
+                <nav class="mt-4">
+                    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{% if pagination_params %}&{{ pagination_params }}{% endif %}" class="btn btn-outline-secondary">Previous</a>{% endif %}
+                    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{% if pagination_params %}&{{ pagination_params }}{% endif %}" class="btn btn-outline-secondary">Next</a>{% endif %}
+                </nav>
+            {% else %}
+                <div class="empty-state text-center py-5">
+                    <h3>No books match “{{ q }}”.</h3>
+                    <a href="{% url 'assistant' %}" class="btn btn-amber">Ask Readora AI</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+    <script src="{% static 'js/catalog.js' %}?v=1"></script>
+{% endblock %}

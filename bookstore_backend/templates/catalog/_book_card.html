@@ -1,0 +1,43 @@
+
+<article class="book-card">
+    <div class="book-card-inner">
+        <div class="book-cover-wrap">
+            <a href="{% url 'book_detail' book.slug %}" class="book-cover-link" aria-label="{{ book.title }}">
+                <div class="book-cover-box">
+                    <img src="{{ book.cover_url }}" alt="Cover of {{ book.title }}" class="book-cover" loading="lazy">
+                    <div class="book-cover-gloss"></div>
+                </div>
+            </a>
+            {% if book.condition %}
+                <span class="book-badge badge-{{ book.condition }}">{{ book.get_condition_display|default:book.condition|title }}</span>
+            {% endif %}
+            {% if book.is_best_seller %}
+                <span class="book-tag-badge best-seller"><i class="bi bi-star-fill"></i> Best Seller</span>
+            {% elif book.is_new_arrival %}
+                <span class="book-tag-badge new-arrival"><i class="bi bi-sparkles"></i> New</span>
+            {% endif %}
+        </div>
+        <div class="book-body">
+            <div class="book-meta-category">
+                <span>{{ book.category.name|default:"General" }}</span>
+            </div>
+            <h4 class="book-title" title="{{ book.title }}">
+                <a href="{% url 'book_detail' book.slug %}">{{ book.title }}</a>
+            </h4>
+            <p class="book-author" title="{{ book.author }}">by <span>{{ book.author }}</span></p>
+            <div class="book-card-bottom">
+                <div class="price-row">
+                    <span class="currency">₹</span><span class="price-val">{{ book.price }}</span>
+                </div>
+                <form method="post" action="{% url 'cart_add' book.id %}" class="book-buy-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-buy">
+                        <i class="bi bi-bag-plus"></i>
+                        <span>Buy</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</article>

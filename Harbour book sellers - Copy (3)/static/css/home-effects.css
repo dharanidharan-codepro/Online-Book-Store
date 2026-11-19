@@ -1,0 +1,195 @@
+/* Modern Dark Luxury Glassmorphism Effects for Home Page */
+body.home-page {
+    --navy: #090e1a;
+    --navy-light: #111a2e;
+    --navy-card: rgba(17, 26, 46, 0.72);
+    --amber: #f5a623;
+    --amber-bright: #fbbf24;
+    --amber-text: #f5a623;
+    --cream: #090e1a;
+    --line: rgba(255, 255, 255, 0.12);
+}
+
+.home-page #main-content {
+    position: relative;
+    isolation: isolate;
+}
+
+/* Hero Section */
+.home-readora-hero {
+    position: relative;
+    isolation: isolate;
+    padding: 4.5rem 0 3.5rem;
+    background: transparent;
+}
+
+.home-readora-effects {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.home-readora-effects .readora-glow {
+    position: absolute;
+    width: 25rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    filter: blur(50px);
+    opacity: 0.35;
+    animation: home-readora-glow 15s ease-in-out infinite alternate;
+}
+.home-readora-effects .readora-glow-one {
+    top: -5rem;
+    left: 40%;
+    background: radial-gradient(circle, rgba(245, 166, 35, 0.45), transparent 70%);
+}
+.home-readora-effects .readora-glow-two {
+    right: 5%;
+    bottom: -8rem;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.35), transparent 70%);
+    animation-delay: -7s;
+}
+
+@keyframes home-readora-glow {
+    from { transform: translate(-20px, 10px) scale(0.9); }
+    to { transform: translate(30px, -20px) scale(1.15); }
+}
+
+/* Home Overview Section */
+.home-overview-section {
+    position: relative;
+    isolation: isolate;
+    padding: 5rem 0;
+    background: rgba(11, 18, 32, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.home-overview-card {
+    background: rgba(17, 26, 46, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 22px;
+    padding: 1.75rem;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.home-overview-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(56, 189, 248, 0.5);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), 0 0 25px rgba(56, 189, 248, 0.18);
+}
+.home-overview-card h3 {
+    color: #ffffff;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+.home-overview-card p {
+    color: var(--text-secondary);
+}
+
+.home-overview-stat {
+    background: rgba(17, 26, 46, 0.75);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    padding: 1.25rem 1.75rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+.home-overview-stat strong {
+    color: var(--amber-bright);
+    font-size: 2.2rem;
+    font-weight: 800;
+}
+.home-overview-stat span {
+    color: var(--text-secondary);
+}
+
+/* CTA Panels */
+.home-page .cta-panel {
+    background: rgba(17, 26, 46, 0.72);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+.home-page .cta-panel.amber {
+    background: radial-gradient(circle at 100% 0%, rgba(245, 166, 35, 0.22) 0%, transparent 60%),
+                rgba(17, 26, 46, 0.75);
+    border-color: rgba(245, 166, 35, 0.35);
+}
+
+/* Light Mode Overrides for Home Effects */
+[data-theme="light"] body.home-page,
+.light-mode body.home-page {
+    --navy: #f8fafc;
+    --navy-light: #ffffff;
+    --navy-card: rgba(255, 255, 255, 0.92);
+    --amber: #d97706;
+    --amber-bright: #b45309;
+    --amber-text: #b45309;
+    --cream: #f8fafc;
+    --line: rgba(15, 23, 42, 0.1);
+}
+
+[data-theme="light"] .home-overview-section,
+.light-mode .home-overview-section {
+    background: rgba(255, 255, 255, 0.65);
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .home-overview-card,
+.light-mode .home-overview-card {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+}
+
+[data-theme="light"] .home-overview-card h3,
+.light-mode .home-overview-card h3 {
+    color: #0f172a;
+}
+
+[data-theme="light"] .home-overview-card p,
+.light-mode .home-overview-card p {
+    color: #334155;
+}
+
+[data-theme="light"] .home-overview-stat,
+.light-mode .home-overview-stat {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+}
+
+[data-theme="light"] .home-overview-stat strong,
+.light-mode .home-overview-stat strong {
+    color: var(--amber-dark);
+}
+
+[data-theme="light"] .home-overview-stat span,
+.light-mode .home-overview-stat span {
+    color: #334155;
+}
+
+[data-theme="light"] .home-page .cta-panel,
+.light-mode .home-page .cta-panel {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
+}
+
+[data-theme="light"] .home-page .cta-panel.amber,
+.light-mode .home-page .cta-panel.amber {
+    background: radial-gradient(circle at 100% 0%, rgba(245, 166, 35, 0.15) 0%, transparent 60%), #ffffff;
+    border-color: rgba(245, 166, 35, 0.3);
+}
+

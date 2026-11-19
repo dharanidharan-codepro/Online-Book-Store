@@ -1,0 +1,25 @@
+
+{% extends 'base.html' %}
+{% block title %}Dashboard | Harbour Books{% endblock %}
+{% block content %}
+<div class="dashboard-shell">
+    <aside class="admin-sidebar">
+        <div class="sidebar-brand">Harbour Books</div>
+        <ul>
+            <li><a href="/manage/">Dashboard</a></li>
+            <li><a href="/admin/">Books</a></li>
+            <li><a href="/admin/">Categories</a></li>
+            <li><a href="/admin/">Orders</a></li>
+        </ul>
+    </aside>
+    <main class="dashboard-main">
+        <h1>Dashboard</h1>
+        <div class="stats-grid">
+            <div class="stat-box"><strong>{{ books_count }}</strong><span>Books</span></div>
+            <div class="stat-box"><strong>{{ categories_count }}</strong><span>Categories</span></div>
+            <div class="stat-box"><strong>{{ subscribers_count }}</strong><span>Subscribers</span></div>
+            <div class="stat-box"><strong>{{ orders_count }}</strong><span>Orders</span></div>
+        </div>
+    </main>
+</div>
+{% endblock %}

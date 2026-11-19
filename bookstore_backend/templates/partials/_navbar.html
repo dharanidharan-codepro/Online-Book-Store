@@ -1,0 +1,87 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg sticky-top main-navbar">
+    <div class="container">
+        <!-- Brand Logo -->
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+            <span class="navbar-logo-window">
+                <img src="{% static 'img/harbour-lighthouse-icon.png' %}" alt="Harbour Books" class="navbar-mark">
+                <span class="navbar-logo-glow"></span>
+            </span>
+            <span class="brand-wordmark"><span class="brand-accent">Harbour</span> Books</span>
+        </a>
+
+        <!-- Mobile Toggler -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+            <!-- Center Navigation Links -->
+            <ul class="navbar-nav mx-auto nav-center">
+                <li class="nav-item">
+                    <a class="nav-link nav-animated-link" href="{% url 'home' %}">
+                        <i class="bi bi-house-door-fill nav-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-animated-link" href="{% url 'books' %}">
+                        <i class="bi bi-journal-bookmark-fill nav-icon"></i>
+                        <span>Catalog</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-animated-link nav-readora-link" href="{% url 'assistant' %}">
+                        <span class="nav-readora-wrap">
+                            <img src="{% static 'img/readora-ai-logo.jpg' %}" alt="Readora AI" class="nav-readora-logo">
+                            <span class="nav-readora-pulse"></span>
+                        </span>
+                        <span>Ask Readora</span>
+                        <span class="nav-ai-badge"><i class="bi bi-stars"></i> AI</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Right Actions (Cart, Sign In / Profile) -->
+            <div class="d-flex align-items-center gap-3 nav-actions">
+                <a class="nav-cart {% if cart_count %}has-items{% endif %}" href="{% url 'cart' %}" title="View Cart">
+                    <i class="bi bi-cart3 nav-cart-icon"></i>
+                    <span class="cart-badge">{{ cart_count|default:0 }}</span>
+                </a>
+
+                {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn nav-user-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="nav-user-avatar"><i class="bi bi-person-fill"></i></span>
+                            <span class="d-none d-md-inline">{{ user.username }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg animate-dropdown">
+                            <li><a class="dropdown-item" href="{% url 'cart' %}"><i class="bi bi-bag-check me-2 text-warning"></i>My orders</a></li>
+                            {% if user.is_staff %}
+                                <li><a class="dropdown-item" href="/manage/"><i class="bi bi-speedometer2 me-2 text-info"></i>Dashboard</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.1);"></li>
+                            <li>
+                                <form method="post" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button class="dropdown-item text-danger" type="submit">
+                                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a href="{% url 'register' %}" class="btn btn-nav-register">
+                        <i class="bi bi-person-plus-fill me-1"></i>
+                        <span>Sign Up</span>
+                    </a>
+                    <button class="btn btn-amber btn-nav-signin sign-in-trigger" type="button">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>
+                        <span>Sign In</span>
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

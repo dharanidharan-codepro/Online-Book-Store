@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Shopping Cart | Harbour Books{% endblock %}
+{% block body_class %}cart-page{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="cart-page-header">
+        <h1 class="cart-page-title">
+            <i class="bi bi-bag-check-fill text-warning"></i>
+            <span>Your Cart</span>
+            {% if cart_count %}<span class="cart-badge-pill">{{ cart_count }}</span>{% endif %}
+        </h1>
+        <a href="{% url 'books' %}" class="cart-continue-link">
+            <i class="bi bi-arrow-left"></i>
+            <span>Continue Shopping</span>
+        </a>
+    </div>
+
+    {% if items %}
+        <div class="cart-layout">
+            <!-- Left: Cart Items List -->
+            <div class="cart-items-container">
+                {% for item in items %}
+                <div class="cart-item-card" data-book-id="{{ item.book.id }}">
+                    <!-- Cover Art -->
+                    <div class="cart-item-cover-wrap">
+                        <a href="{% url 'book_detail' item.book.slug %}">
+                            <img src="{{ item.book.cover_url }}" 
+                                 alt="Cover of {{ item.book.title }}" 
+                                 class="cart-item-cover"
+                                 onerror="this.onerror=null; this.src='/static/img/cover-placeholder.svg';">
+                        </a>
+                    </div>
+
+                    <!-- Book Info -->
+                    <div class="cart-item-info">
+                        <div class="cart-item-title">
+                            <a href="{% url 'book_detail' item.book.slug %}">{{ item.book.title }}</a>
+                        </div>
+                        <div class="cart-item-author">by {{ item.book.author }}</div>
+                        <div class="cart-item-meta">
+                            {% if item.book.category %}
+                                <span class="cart-badge-category">{{ item.book.category.name }}</span>
+                            {% endif %}
+                            <span class="cart-item-price-unit">₹{{ item.book.price }} each</span>
+                        </div>
+                    </div>
+
+                    <!-- Quantity Stepper -->
+                    <div>
+                        <form method="post" action="{% url 'cart_update' item.book.id %}" class="cart-qty-form">
+                            {% csrf_token %}
+                            <div class="cart-qty-stepper">
+                                <button type="button" class="cart-qty-btn cart-minus" aria-label="Decrease quantity" 
+                                        onclick="updateQty(this, -1)">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <input type="number" name="quantity" class="cart-qty-val" 
+                                       value="{{ item.quantity }}" min="1" max="{{ item.book.stock|default:99 }}" readonly>
+                                <button type="button" class="cart-qty-btn cart-plus" aria-label="Increase quantity"
+                                        onclick="updateQty(this, 1)">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Subtotal -->
+                    <div class="cart-item-subtotal">
+                        <div class="cart-subtotal-label">Subtotal</div>
+                        <div class="cart-subtotal-val">₹{{ item.subtotal }}</div>
+                    </div>
+
+                    <!-- Remove -->
+                    <div>
+                        <form method="post" action="{% url 'cart_remove' item.book.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="cart-remove-btn" title="Remove {{ item.book.title }} from cart">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Right: Sticky Order Summary -->
+            <aside class="cart-summary-sidebar">
+                <div class="cart-summary-header">
+                    <i class="bi bi-receipt"></i>
+                    <h3>Order Summary</h3>
+                </div>
+
+                <div class="cart-summary-row">
+                    <span>Items ({{ cart_count }})</span>
+                    <strong class="text-white">₹{{ total }}</strong>
+                </div>
+
+                <div class="cart-summary-row">
+                    <span>Delivery</span>
+                    <span class="cart-summary-free-badge">
+                        <i class="bi bi-truck"></i> Free Shipping
+                    </span>
+                </div>
+
+                <div class="cart-summary-row">
+                    <span>Taxes & Fees</span>
+                    <span class="text-secondary small">Included</span>
+                </div>
+
+                <div class="cart-summary-total-box">
+                    <div class="cart-summary-total-label">Total to Pay</div>
+                    <div class="cart-summary-total-num">₹{{ total }}</div>
+                </div>
+
+                <a href="{% url 'checkout' %}" class="btn btn-amber cart-checkout-btn">
+                    <span>Proceed to Checkout</span>
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+
+                <div class="cart-trust-badges">
+                    <div class="cart-trust-item">
+                        <i class="bi bi-shield-check"></i>
+                        <span>100% Genuine Books Direct from Sellers</span>
+                    </div>
+                    <div class="cart-trust-item">
+                        <i class="bi bi-lightning-charge"></i>
+                        <span>Fast Express Delivery (2–5 Days)</span>
+                    </div>
+                    <div class="cart-trust-item">
+                        <i class="bi bi-lock-fill"></i>
+                        <span>End-to-End Secure 256-bit Checkout</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="cart-empty-box">
+            <div class="cart-empty-icon">
+                <i class="bi bi-bag-x"></i>
+            </div>
+            <h3>Your cart is empty</h3>
+            <p>Looks like you haven't added any books yet. Discover timeless classics, best sellers, and new arrivals.</p>
+            <a href="{% url 'books' %}" class="btn btn-amber px-4 py-2 fw-bold">
+                <i class="bi bi-compass me-2"></i>Explore Books
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function updateQty(btn, delta) {
+    const form = btn.closest('form');
+    const input = form.querySelector('.cart-qty-val');
+    let val = parseInt(input.value) || 1;
+    const max = parseInt(input.getAttribute('max')) || 99;
+    val += delta;
+    if (val < 1) val = 1;
+    if (val > max) val = max;
+    input.value = val;
+    form.submit();
+}
+</script>
+{% endblock %}

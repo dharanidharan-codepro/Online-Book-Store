@@ -1,0 +1,46 @@
+
+{% extends 'base.html' %}
+{% block title %}Checkout | Harbour Books{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="checkout-shell">
+        <div class="checkout-form">
+            <h1>Checkout</h1>
+            <div class="progress-bar mb-4">
+                <span class="active">Shipping</span>
+                <span>Payment</span>
+                <span>Confirmation</span>
+            </div>
+            <p class="dummy-payment alert alert-info">Demo mode: no real charge is made.</p>
+            <form method="post" action="{% url 'checkout' %}">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="invalid-feedback d-block">{{ field.errors|join:', ' }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button class="btn btn-amber mt-3 w-100 py-3 fw-bold fs-5" type="submit">Place Order (₹{{ total }}) →</button>
+            </form>
+        </div>
+        <aside class="checkout-summary">
+            <h3>Order summary</h3>
+            {% for item in items %}
+                <div class="summary-item d-flex justify-content-between py-2 border-bottom" style="border-color: rgba(255,255,255,0.08) !important;">
+                    <div>
+                        <div class="fw-semibold text-light">{{ item.book.title }}</div>
+                        <small class="text-muted">₹{{ item.book.price }} × {{ item.quantity }}</small>
+                    </div>
+                    <span class="text-warning fw-semibold align-self-center">₹{{ item.subtotal }}</span>
+                </div>
+            {% endfor %}
+            <div class="summary-row total d-flex justify-content-between pt-3">
+                <span>Total Amount</span><strong class="text-warning fs-5">₹{{ total }}</strong>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

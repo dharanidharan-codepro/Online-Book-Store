@@ -1,0 +1,66 @@
+
+{% extends 'base.html' %}
+{% block title %}Cart | Harbour Books{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <h1>Your cart
+        {% if cart_count %}<span class="badge bg-secondary ms-2">{{ cart_count }}</span>{% endif %}
+    </h1>
+    {% if items %}
+        <div class="cart-layout">
+            <div class="cart-items table-responsive">
+                <table class="table cart-table">
+                    <thead><tr><th>Book</th><th>Price</th><th>Qty</th><th>Subtotal</th><th></th></tr></thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <a href="{% url 'book_detail' item.book.slug %}" class="flex-shrink-0">
+                                        <img src="{{ item.book.cover_url }}" alt="Cover of {{ item.book.title }}" style="width: 54px; height: 78px; object-fit: cover; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
+                                    </a>
+                                    <div>
+                                        <div class="cart-title">
+                                            <a href="{% url 'book_detail' item.book.slug %}">{{ item.book.title }}</a>
+                                        </div>
+                                        <small class="text-muted">by {{ item.book.author }}</small>
+                                        <div class="small text-secondary mt-1">₹{{ item.book.price }} each</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>₹{{ item.book.price }}</td>
+                            <td>
+                                <form method="post" action="{% url 'cart_update' item.book.id %}" class="d-flex align-items-center gap-1">{% csrf_token %}
+                                    <input type="number" class="form-control form-control-sm" name="quantity"
+                                           value="{{ item.quantity }}" min="0" max="{{ item.book.stock }}" style="width:70px;">
+                                    <button class="btn btn-outline-light btn-sm px-2 py-1" type="submit" title="Update quantity">↻</button>
+                                </form>
+                            </td>
+                            <td class="fw-semibold text-warning">₹{{ item.subtotal }}</td>
+                            <td>
+                                <form method="post" action="{% url 'cart_remove' item.book.id %}">{% csrf_token %}
+                                    <button class="btn btn-outline-danger btn-sm" type="submit" title="Remove item"><i class="bi bi-trash3"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <aside class="cart-summary">
+                <h3>Summary</h3>
+                <div class="summary-row"><span>Subtotal</span><strong>₹{{ total }}</strong></div>
+                <div class="summary-row"><span>Shipping</span><strong class="text-success">Free</strong></div>
+                <div class="summary-row total"><span>Total</span><strong class="text-warning fs-5">₹{{ total }}</strong></div>
+                <a href="{% url 'checkout' %}" class="btn btn-amber w-100 mt-3 py-2 fw-bold">Proceed to Checkout →</a>
+            </aside>
+        </div>
+    {% else %}
+        <div class="empty-state text-center py-5">
+            <h3>Your cart is empty.</h3>
+            <p>Browse the catalog or ask Readora AI to find a book, then add it here.</p>
+            <a href="{% url 'books' %}" class="btn btn-navy">Browse books</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

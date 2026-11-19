@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% if role == 'staff' %}Staff Login{% else %}Sign In{% endif %} | Harbour Books{% endblock %}
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-card-header">
+            <img src="{% static 'img/harbour-books-logo.jpg' %}" alt="Harbour Books logo" class="auth-logo" onerror="this.style.display='none'">
+            <h1>{% if role == 'staff' %}Staff Login{% else %}Welcome back{% endif %}</h1>
+            <p class="auth-subtitle">{% if role == 'staff' %}Access the management dashboard{% else %}Sign in to your Harbour Books account{% endif %}</p>
+        </div>
+
+        {% if form.errors or error %}
+            <div class="auth-error-banner">
+                <div class="d-flex align-items-start gap-2">
+                    <i class="bi bi-exclamation-triangle-fill text-warning flex-shrink-0 mt-1"></i>
+                    <div>
+                        {% if form.non_field_errors %}
+                            {% for err in form.non_field_errors %}
+                                <p class="mb-1">{{ err }}</p>
+                            {% endfor %}
+                        {% elif error %}
+                            <p class="mb-1">{{ error }}</p>
+                        {% else %}
+                            <p class="mb-1">Invalid username or password. Please try again.</p>
+                        {% endif %}
+
+                        {% if user_not_found and attempted_username %}
+                            <div class="mt-2">
+                                <a href="{% url 'register' %}?username={{ attempted_username|urlencode }}" class="btn btn-sm btn-amber py-1 px-3 text-dark fw-bold">
+                                    Create account as "{{ attempted_username }}" →
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <form method="post" class="auth-form" autocomplete="on">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next|default:'/' }}">
+
+            <div class="auth-field">
+                <label class="auth-label" for="id_username">
+                    <i class="bi bi-person"></i> Username
+                </label>
+                <input type="text"
+                       name="username"
+                       id="id_username"
+                       class="auth-input {% if form.username.errors %}is-invalid{% endif %}"
+                       placeholder="Enter your username"
+                       value="{{ form.username.value|default:attempted_username|default:'' }}"
+                       required
+                       autofocus
+                       autocomplete="username">
+                {% if form.username.errors %}
+                    <div class="auth-field-error">{{ form.username.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="auth-field">
+                <label class="auth-label" for="id_password">
+                    <i class="bi bi-lock"></i> Password
+                </label>
+                <div class="position-relative">
+                    <input type="password"
+                           name="password"
+                           id="id_password"
+                           class="auth-input {% if form.password.errors %}is-invalid{% endif %}"
+                           placeholder="Enter your password"
+                           required
+                           autocomplete="current-password"
+                           style="padding-right: 42px;">
+                    <button type="button" 
+                            class="btn position-absolute end-0 top-50 translate-middle-y text-muted border-0 bg-transparent py-0 px-3" 
+                            id="togglePassword"
+                            aria-label="Toggle password visibility"
+                            tabindex="-1">
+                        <i class="bi bi-eye" id="toggleIcon"></i>
+                    </button>
+                </div>
+                {% if form.password.errors %}
+                    <div class="auth-field-error">{{ form.password.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <button class="btn btn-amber w-100 auth-submit mt-3" type="submit">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="{% url 'register' %}">Create an account</a></p>
+            {% if role != 'staff' %}
+                <p class="mt-2"><a href="{% url 'staff_login' %}" class="small text-muted" style="text-decoration:none;"><i class="bi bi-shield-lock me-1"></i>Staff sign in</a></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const toggle = document.getElementById('togglePassword');
+    const pwd = document.getElementById('id_password');
+    const icon = document.getElementById('toggleIcon');
+    if (toggle && pwd && icon) {
+        toggle.addEventListener('click', function(e){
+            e.preventDefault();
+            const isPassword = pwd.getAttribute('type') === 'password';
+            pwd.setAttribute('type', isPassword ? 'text' : 'password');
+            icon.classList.toggle('bi-eye', !isPassword);
+            icon.classList.toggle('bi-eye-slash', isPassword);
+        });
+    }
+});
+</script>
+{% endblock %}

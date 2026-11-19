@@ -1,0 +1,10 @@
+{
+    "include": [
+        "."
+    ],
+    "extraPaths": [
+        "."
+    ],
+    "pythonPath": "C:\\Users\\Dharanidharan\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "reportMissingImports": "none"
+}

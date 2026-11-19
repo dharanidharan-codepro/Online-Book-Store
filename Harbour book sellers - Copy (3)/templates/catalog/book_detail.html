@@ -1,0 +1,160 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ book.title }} | Harbour Books{% endblock %}
+{% block body_class %}book-detail-page{% endblock %}
+{% block content %}
+<div class="container py-5 book-detail-page-content">
+    <nav class="breadcrumb"><a href="{% url 'home' %}">Home</a> / <a href="{% url 'books' %}">Catalog</a> / <span>{{ book.title }}</span></nav>
+    <div class="row g-5 book-detail-main">
+        <div class="col-md-4">
+            <img src="{{ book.cover_url }}" alt="Cover of {{ book.title }}" class="detail-cover">
+        </div>
+        <div class="col-md-8 book-detail-info">
+            <h1>{{ book.title }}</h1>
+            <p class="author-text">by {{ book.author }}</p>
+            <div class="detail-meta">
+                <span class="badge">{{ book.condition }}</span>
+                <span class="stock-badge">{{ book.stock }} in stock</span>
+                {% if book.category %}<span class="category-badge">{{ book.category.name }}</span>{% endif %}
+            </div>
+            <div class="price-box">₹{{ book.price }}</div>
+            <form method="post" action="{% url 'cart_add' book.id %}" class="d-flex flex-wrap align-items-center gap-3 my-3">
+                {% csrf_token %}
+                <div class="qty-row d-inline-flex align-items-center">
+                    <button class="qty-btn btn-minus" type="button" onclick="const q=document.getElementById('detail-qty-input');if(parseInt(q.value)>1)q.value=parseInt(q.value)-1;">-</button>
+                    <input type="number" name="quantity" id="detail-qty-input" value="1" min="1" max="{{ book.stock }}" class="form-control text-center" style="width: 65px; height: 38px; border-radius: 8px;">
+                    <button class="qty-btn btn-plus" type="button" onclick="const q=document.getElementById('detail-qty-input');if(parseInt(q.value)<{{ book.stock|default:99 }})q.value=parseInt(q.value)+1;">+</button>
+                </div>
+                <button type="submit" class="btn btn-amber px-4 py-2 fw-bold">
+                    <i class="bi bi-bag-plus me-1"></i> Add to Cart
+                </button>
+            </form>
+            {% if book.is_audiobook and book.audio_url %}<a href="{{ book.audio_url }}" class="btn btn-outline-info" target="_blank"><i class="bi bi-headphones me-1"></i> Audio version</a>{% endif %}
+
+            {# ── AI Summary Section (always visible) ── #}
+            {% if book.ai_summary %}
+            <div class="ai-summary-box mt-4">
+                <div class="ai-summary-header">
+                    <i class="bi bi-stars"></i>
+                    <span>AI Summary</span>
+                    <span class="ai-summary-badge">Powered by Gemini</span>
+                </div>
+                <div class="ai-summary-body" id="summary-display">
+                    <p>{{ book.ai_summary }}</p>
+                </div>
+                <button type="button" id="refresh-summary-btn" class="btn btn-sm btn-outline-secondary mt-2" data-slug="{{ book.slug }}">
+                    <i class="bi bi-arrow-repeat me-1"></i> Regenerate
+                </button>
+            </div>
+            {% else %}
+            <div class="ai-summary-box mt-4">
+                <div class="ai-summary-header">
+                    <i class="bi bi-stars"></i>
+                    <span>AI Summary</span>
+                    <span class="ai-summary-badge">Powered by Gemini</span>
+                </div>
+                <div class="ai-summary-body" id="summary-content" data-slug="{{ book.slug }}">
+                    <div class="d-flex align-items-center gap-2 py-3 text-muted">
+                        <span class="spinner-border spinner-border-sm" role="status"></span>
+                        <span>Generating AI summary…</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="offers-box mt-4">
+                <h3 class="fs-5 mb-3">Other Marketplace Offers</h3>
+                {% for offer in book.offers.all|slice:':3' %}
+                    <div class="offer-row d-flex justify-content-between align-items-center py-2 border-bottom" style="border-color: rgba(255,255,255,0.08) !important;">
+                        <div>
+                            <strong class="text-light">{{ offer.seller_name }}</strong>
+                            <div class="small text-muted">{{ offer.get_condition_display|default:offer.condition|title }}</div>
+                        </div>
+                        <div class="fw-semibold text-warning">₹{{ offer.price }}</div>
+                        <div class="small text-secondary">{% if offer.shipping_cost == 0 %}Free ship{% else %}+₹{{ offer.shipping_cost }} ship{% endif %}</div>
+                        {% if offer.buy_url %}<a href="{{ offer.buy_url }}" class="btn btn-sm btn-outline-light" target="_blank" rel="noopener noreferrer">Buy →</a>{% else %}<form method="post" action="{% url 'cart_add' book.id %}">{% csrf_token %}<button type="submit" class="btn btn-sm btn-outline-light">Buy →</button></form>{% endif %}
+                    </div>
+                {% empty %}<p class="text-muted small">No secondary marketplace offers currently listed.</p>{% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="tabs mt-5">
+        <ul class="nav nav-tabs" id="book-detail-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab-btn-synopsis" data-tab-target="#pane-synopsis" type="button" role="tab">Synopsis</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-btn-details" data-tab-target="#pane-details" type="button" role="tab">Details</button>
+            </li>
+        </ul>
+        <div class="tab-content mt-3">
+            <div class="tab-pane active" id="pane-synopsis" role="tabpanel">
+                <p>{{ book.synopsis|default:book.description|default:"No synopsis available yet." }}</p>
+            </div>
+            <div class="tab-pane d-none" id="pane-details" role="tabpanel">
+                <table class="table table-sm book-details-table">
+                    <tr><td class="text-muted">Author</td><td>{{ book.author }}</td></tr>
+                    <tr><td class="text-muted">Format</td><td>{{ book.format }}</td></tr>
+                    <tr><td class="text-muted">Pages</td><td>{{ book.pages }}</td></tr>
+                    <tr><td class="text-muted">Publisher</td><td>{{ book.publisher|default:"-" }}</td></tr>
+                    <tr><td class="text-muted">Year</td><td>{{ book.publication_year }}</td></tr>
+                    <tr><td class="text-muted">Language</td><td>{{ book.language }}</td></tr>
+                    {% if book.isbn %}<tr><td class="text-muted">ISBN</td><td>{{ book.isbn }}</td></tr>{% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <section class="related-books mt-5">
+        <h3>Related books</h3>
+        <div class="book-grid small-grid">
+            {% for item in related_books %}
+                {% include 'catalog/_book_card.html' with book=item %}
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+(function(){
+    // Auto-load summary for books without one
+    const sc = document.getElementById('summary-content');
+    if (sc) {
+        const slug = sc.dataset.slug;
+        fetch('/summary/' + encodeURIComponent(slug) + '/')
+            .then(r => r.json())
+            .then(data => {
+                if (data.summary) {
+                    sc.innerHTML = '<p>' + data.summary.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p>';
+                } else {
+                    sc.innerHTML = '<p class="text-muted">No summary available.</p>';
+                }
+            })
+            .catch(() => {
+                sc.innerHTML = '<p class="text-muted">Could not load summary.</p>';
+            });
+    }
+
+    // Refresh button
+    const refreshBtn = document.getElementById('refresh-summary-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function(){
+            const slug = this.dataset.slug;
+            const target = document.getElementById('summary-display') || document.getElementById('summary-content');
+            if (target) target.innerHTML = '<div class="d-flex align-items-center gap-2 py-3 text-muted"><span class="spinner-border spinner-border-sm"></span> Regenerating…</div>';
+            fetch('/summary/' + encodeURIComponent(slug) + '/?refresh=1')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.summary && target) {
+                        target.innerHTML = '<p>' + data.summary.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p>';
+                    }
+                })
+                .catch(() => {
+                    if (target) target.innerHTML = '<p class="text-muted">Regeneration failed.</p>';
+                });
+        });
+    }
+})();
+</script>
+{% endblock %}

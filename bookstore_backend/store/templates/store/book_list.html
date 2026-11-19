@@ -1,0 +1,63 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block title %}{% if category %}{{ category.name }} Books{% elif q %}Search "{{ q }}"{% else %}All Books{% endif %} | Harbour Books{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <!-- Header with Search & Filters -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom" style="border-color: rgba(255,255,255,0.1) !important;">
+        <div>
+            <h1 class="display-6 fw-bold text-light mb-1">
+                {% if category %}{{ category.name }}{% elif section %}{{ section|title }}{% elif q %}Results for “{{ q }}”{% else %}All Books{% endif %}
+            </h1>
+            <p class="text-secondary small mb-0">{{ page_obj.paginator.count }} books available in catalogue</p>
+        </div>
+        <form method="get" action="{% url 'store:book_list' %}" class="d-flex gap-2">
+            {% if category %}<input type="hidden" name="category" value="{{ category.slug }}">{% endif %}
+            <div class="input-group">
+                <input type="text" name="q" value="{{ q|default:'' }}" class="form-control text-light" style="background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15);" placeholder="Search title or author…">
+                <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+            </div>
+            <select name="sort" class="form-select text-light" style="background: #111a2e; border-color: rgba(255,255,255,0.15); width: auto;" onchange="this.form.submit()">
+                <option value="new" {% if sort == 'new' %}selected{% endif %}>Newest</option>
+                <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                <option value="title" {% if sort == 'title' %}selected{% endif %}>Title A-Z</option>
+                <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Rating</option>
+            </select>
+        </form>
+    </div>
+
+    <!-- Book Grid -->
+    {% if books %}
+        <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mb-5">
+            {% for book in books %}
+                <div class="col">
+                    {% include 'store/_book_card.html' with book=book %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+            <nav class="d-flex justify-content-center my-4">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link text-light bg-dark" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&sort={{ sort }}">« Prev</a></li>
+                    {% endif %}
+                    <li class="page-item active"><span class="page-link bg-warning text-dark border-warning">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link text-light bg-dark" href="?page={{ page_obj.next_page_number }}&q={{ q }}&sort={{ sort }}">Next »</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <div class="text-center py-5 my-5">
+            <i class="bi bi-book text-muted display-1"></i>
+            <h3 class="text-light mt-3">No books found</h3>
+            <p class="text-muted">Try adjusting your search query or browse our full catalogue.</p>
+            <a href="{% url 'store:book_list' %}" class="btn btn-amber rounded-pill px-4">Browse All Books</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

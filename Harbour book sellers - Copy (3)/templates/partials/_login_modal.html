@@ -1,0 +1,137 @@
+{% load static %}
+<div id="signInModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="login-title">
+        <button class="modal-close" type="button" aria-label="Close sign in">×</button>
+        <div class="sign-in-card">
+            <div class="card-header text-center mb-3">
+                <img src="{% static 'img/harbour-books-logo.jpg' %}" alt="Harbour Books logo" class="modal-logo">
+                <h3 id="login-title" class="mt-2 text-white fw-bold">Welcome back</h3>
+                <p class="text-muted small">Sign in to your Harbour Books account</p>
+            </div>
+
+            <div id="modalLoginAlert" class="alert d-none py-2 px-3 mb-3 small" role="alert"></div>
+
+            <form id="modalLoginForm" method="post" action="{% url 'customer_login' %}" autocomplete="on">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                
+                <div class="mb-3 text-start">
+                    <label for="login-username" class="auth-label"><i class="bi bi-person"></i> Username</label>
+                    <input id="login-username" class="auth-input" type="text" name="username" placeholder="Enter username" autocomplete="username" required autofocus>
+                </div>
+                
+                <div class="mb-3 text-start">
+                    <label for="login-password" class="auth-label"><i class="bi bi-lock"></i> Password</label>
+                    <div class="position-relative">
+                        <input id="login-password" class="auth-input" type="password" name="password" placeholder="Enter password" autocomplete="current-password" required style="padding-right: 42px;">
+                        <button type="button" 
+                                class="btn position-absolute end-0 top-50 translate-middle-y text-muted border-0 bg-transparent py-0 px-3" 
+                                id="toggleModalPassword"
+                                aria-label="Toggle password visibility"
+                                tabindex="-1">
+                            <i class="bi bi-eye" id="toggleModalIcon"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" id="modalSignInBtn" class="btn btn-amber w-100 mt-3 py-2 fw-bold fs-6">
+                    <span class="btn-text"><i class="bi bi-box-arrow-in-right me-2"></i>Sign In</span>
+                </button>
+            </form>
+
+            <div class="mt-3 text-center border-top pt-3" style="border-color: rgba(255,255,255,0.08) !important;">
+                <span class="text-muted small">Don’t have an account?</span> 
+                <a href="{% url 'register' %}" class="fw-semibold text-warning ms-1">Create one</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const toggle = document.getElementById('toggleModalPassword');
+    const pwd = document.getElementById('login-password');
+    const icon = document.getElementById('toggleModalIcon');
+    if (toggle && pwd && icon) {
+        toggle.addEventListener('click', function(e){
+            e.preventDefault();
+            const isPassword = pwd.getAttribute('type') === 'password';
+            pwd.setAttribute('type', isPassword ? 'text' : 'password');
+            icon.classList.toggle('bi-eye', !isPassword);
+            icon.classList.toggle('bi-eye-slash', isPassword);
+        });
+    }
+
+    const form = document.getElementById('modalLoginForm');
+    const alertBox = document.getElementById('modalLoginAlert');
+    const submitBtn = document.getElementById('modalSignInBtn');
+
+    if (form && submitBtn) {
+        form.addEventListener('submit', async function(e){
+            e.preventDefault();
+            if (alertBox) {
+                alertBox.className = 'alert d-none py-2 px-3 mb-3 small';
+                alertBox.textContent = '';
+            }
+
+            const usernameInput = document.getElementById('login-username');
+            const passwordInput = document.getElementById('login-password');
+            const username = usernameInput ? usernameInput.value.trim() : '';
+            const password = passwordInput ? passwordInput.value : '';
+
+            if (!username || !password) {
+                if (alertBox) {
+                    alertBox.className = 'alert alert-warning py-2 px-3 mb-3 small';
+                    alertBox.textContent = 'Please enter both username and password.';
+                }
+                return;
+            }
+
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Signing in…';
+
+            try {
+                const formData = new FormData(form);
+                const res = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                });
+
+                const data = await res.json().catch(() => null);
+
+                if (res.ok && data && data.success) {
+                    if (alertBox) {
+                        alertBox.className = 'alert alert-success py-2 px-3 mb-3 small';
+                        alertBox.textContent = 'Signed in successfully! Redirecting…';
+                    }
+                    setTimeout(function(){
+                        window.location.href = data.redirect_url || window.location.href;
+                    }, 400);
+                } else {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnHtml;
+                    const err = (data && data.error) ? data.error : 'Invalid username or password. Please try again.';
+                    if (alertBox) {
+                        alertBox.className = 'alert alert-danger py-2 px-3 mb-3 small';
+                        alertBox.textContent = err;
+                    }
+                    if (passwordInput) {
+                        passwordInput.focus();
+                        passwordInput.select();
+                    }
+                }
+            } catch (err) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+                // Fallback to normal form submit if fetch network fails
+                form.submit();
+            }
+        });
+    }
+});
+</script>

@@ -1,0 +1,182 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home | Harbour Books{% endblock %}
+{% block body_class %}home-page{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/home-effects.css' %}?v=55">
+{% endblock %}
+{% block content %}
+<section class="hero-section home-readora-hero">
+    <div id="readora-effects" class="home-readora-effects" aria-hidden="true"></div>
+    <div class="container py-5">
+        <div class="row align-items-center justify-content-center g-5">
+            <div class="col-lg-9 text-center">
+                <p class="eyebrow">Harbour Books</p>
+                <h1>Every book. <span class="accent-text">The best price.</span></h1>
+                <p class="lead mx-auto" style="max-width: 650px;">Search the Harbour Books catalog by title, author, or ISBN, with curated collections and unbeatable prices.</p>
+                <div class="search-card text-start mx-auto" style="max-width: 680px;">
+                    <form method="get" action="{% url 'books' %}">
+                        <input type="text" name="q" class="form-control big-input" placeholder="Search by title, author, or ISBN">
+                        <div class="chip-row mt-3 justify-content-center">
+                            <label class="chip active"><input type="radio" name="sort" value="price_asc" checked> Best price</label>
+                            <label class="chip"><input type="radio" name="sort" value="newest"> Newest</label>
+                            <label class="chip"><input type="radio" name="sort" value="featured"> Featured</label>
+                            <label class="chip"><input type="radio" name="sort" value="title"> Title A–Z</label>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between gap-3 mt-3">
+                            <button class="btn btn-navy" type="submit">Search the catalog</button>
+                            <label class="form-check disabled-check"><input class="form-check-input" type="checkbox" name="deep_search" value="1"> Deep search</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="home-overview-section py-5">
+    <div class="container">
+        <div class="home-overview-heading">
+            <span class="home-overview-eyebrow">BOOKSHOP, MADE SIMPLE</span>
+            <h2 class="section-title">Everything Harbour Books does, in one place</h2>
+            <p class="section-subtitle">Search, compare, buy, and track your orders without switching tabs.</p>
+        </div>
+        <div class="home-overview-stats">
+            <div class="home-overview-stat"><strong>{{ book_count }}</strong><span>Books in catalog</span></div>
+            <div class="home-overview-stat"><strong>{{ seller_count }}</strong><span>Sellers compared</span></div>
+            <div class="home-overview-stat"><strong>24/7</strong><span>Here for your next read</span></div>
+        </div>
+        <div class="home-overview-grid">
+            <article class="home-overview-card">
+                <span class="home-overview-icon"><i class="bi bi-search"></i></span>
+                <h3>Find any book, any format</h3>
+                <p>Search by title, author, ISBN, or a description.</p>
+            </article>
+            <article class="home-overview-card">
+                <span class="home-overview-icon"><i class="bi bi-graph-up-arrow"></i></span>
+                <h3>Price comparison at a glance</h3>
+                <p>Store and partner offers ranked by total cost.</p>
+            </article>
+            <article class="home-overview-card">
+                <span class="home-overview-icon"><i class="bi bi-bag-check"></i></span>
+                <h3>Buy, track and return</h3>
+                <p>Orders stay in your profile.</p>
+            </article>
+            <article class="home-overview-card">
+                <span class="home-overview-icon"><i class="bi bi-binoculars"></i></span>
+                <h3>Deep search for the hard finds</h3>
+                <p>Find books that are hard to track down.</p>
+                <span class="home-overview-status">Coming soon</span>
+            </article>
+            <article class="home-overview-card">
+                <span class="home-overview-icon"><i class="bi bi-camera"></i></span>
+                <h3>Damage claims with a photo</h3>
+                <p>Contact us with a photo if an order arrives damaged.</p>
+            </article>
+            <article class="home-overview-card">
+                <span class="home-overview-icon"><i class="bi bi-stars"></i></span>
+                <h3>Recommendations with personality</h3>
+                <p>Ask Readora to help find your next great read.</p>
+            </article>
+        </div>
+    </div>
+</section>
+<section class="py-5">
+    <div class="container">
+        <div class="cta-grid">
+            <div class="cta-panel light">
+                <h3>Prefer to browse?</h3>
+                <p>Every title we stock, with covers, on one page.</p>
+                <a href="{% url 'books' %}" class="btn btn-navy">Open the catalog</a>
+            </div>
+            <div class="cta-panel amber">
+                <h3>Selling books?</h3>
+                <p>List your inventory and reach more buyers.</p>
+                <a href="{% url 'register' %}" class="btn btn-navy">Become a seller</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% if categories %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title">Browse by category</h2>
+        <div class="category-grid">
+            {% for category in categories %}
+            <a href="{% url 'category' category.slug %}" class="category-tile">{{ category.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% else %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title">Browse by category</h2>
+        <p class="catalog-empty-state">Categories are being added. Browse the catalog to see available books.</p>
+        <a class="btn btn-outline-navy" href="{% url 'books' %}">Open the catalog</a>
+    </div>
+</section>
+{% endif %}
+{% if not best_sellers and not new_arrivals and newest_books %}
+<section class="py-5">
+    <div class="container">
+        <div class="row-header"><h3>Featured books</h3><a href="{% url 'books' %}">View all</a></div>
+        <div class="book-grid small-grid">
+            {% for book in newest_books %}
+                {% include 'catalog/_book_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif not best_sellers and not new_arrivals and not audiobooks %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title">Featured books</h2>
+        <p class="catalog-empty-state">Our shelves are being stocked. Check the catalog again soon.</p>
+        <a class="btn btn-outline-navy" href="{% url 'books' %}">Open the catalog</a>
+    </div>
+</section>
+{% endif %}
+{% if best_sellers %}
+<section class="py-5">
+    <div class="container">
+        <div class="row-header"><h3>Best sellers</h3><a href="{% url 'books' %}?featured=best_seller">View all</a></div>
+        <div class="book-grid small-grid">
+            {% for book in best_sellers %}
+                {% include 'catalog/_book_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% if new_arrivals %}
+<section class="py-5">
+    <div class="container">
+        <div class="row-header"><h3>New arrivals</h3><a href="{% url 'books' %}?featured=new_arrival">View all</a></div>
+        <div class="book-grid small-grid">
+            {% for book in new_arrivals %}
+                {% include 'catalog/_book_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% if audiobooks %}
+<section class="py-5">
+    <div class="container">
+        <div class="row-header"><h3>Audiobooks</h3><a href="{% url 'books' %}?featured=audiobook">View all</a></div>
+        <div class="book-grid small-grid">
+            {% for book in audiobooks %}
+                {% include 'catalog/_book_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+{% block extra_scripts %}
+    <script src="{% static 'js/home-book-texture.js' %}?v=3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+    <script src="{% static 'js/readora-effects.js' %}?v=5"></script>
+{% endblock %}
