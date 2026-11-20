@@ -2003,6 +2003,12 @@ a:hover { color: var(--amber-bright); }
     width: calc(100% - 2rem);
     position: relative;
     animation: modal-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: auto !important;
+}
+.modal-dialog *,
+.sign-in-card,
+.sign-in-card * {
+    pointer-events: auto;
 }
 @keyframes modal-pop {
     from { opacity: 0; transform: scale(0.92) translateY(12px); }
@@ -2469,6 +2475,10 @@ a:hover { color: var(--amber-bright); }
     color: #ffffff;
     font-size: 0.95rem;
     transition: all 0.25s ease;
+    pointer-events: auto !important;
+    cursor: text !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
 }
 .auth-input:focus {
     outline: none;

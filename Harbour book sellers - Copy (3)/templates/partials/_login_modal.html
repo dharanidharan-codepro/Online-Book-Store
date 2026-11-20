@@ -1,8 +1,8 @@
 {% load static %}
 <div id="signInModal" class="modal-backdrop" aria-hidden="true">
-    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="login-title">
-        <button class="modal-close" type="button" aria-label="Close sign in">×</button>
-        <div class="sign-in-card">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="login-title" style="pointer-events: auto !important;">
+        <button class="modal-close" type="button" aria-label="Close sign in" style="pointer-events: auto !important; cursor: pointer;">×</button>
+        <div class="sign-in-card" style="pointer-events: auto !important;">
             <div class="card-header text-center mb-3">
                 <img src="{% static 'img/harbour-books-logo.jpg' %}" alt="Harbour Books logo" class="modal-logo">
                 <h3 id="login-title" class="mt-2 text-white fw-bold">Welcome back</h3>
@@ -23,8 +23,8 @@
                            name="username" 
                            placeholder="Enter username" 
                            autocomplete="off" 
-                           value=""
-                           required>
+                           required
+                           style="pointer-events: auto !important; cursor: text !important;">
                 </div>
                 
                 <div class="mb-3 text-start">
@@ -36,14 +36,14 @@
                                name="password" 
                                placeholder="Enter password" 
                                autocomplete="new-password" 
-                               value=""
                                required 
-                               style="padding-right: 42px;">
+                               style="padding-right: 42px; pointer-events: auto !important; cursor: text !important;">
                         <button type="button" 
                                 class="btn position-absolute end-0 top-50 translate-middle-y text-muted border-0 bg-transparent py-0 px-3" 
                                 id="toggleModalPassword"
                                 aria-label="Toggle password visibility"
-                                tabindex="-1">
+                                tabindex="-1"
+                                style="pointer-events: auto !important; cursor: pointer;">
                             <i class="bi bi-eye" id="toggleModalIcon"></i>
                         </button>
                     </div>
@@ -73,11 +73,9 @@ window.resetModalLoginForm = function() {
     }
     if (u) {
         u.value = '';
-        u.removeAttribute('readonly');
     }
     if (p) {
         p.value = '';
-        p.removeAttribute('readonly');
     }
     if (a) {
         a.className = 'alert d-none py-2 px-3 mb-3 small';
@@ -86,9 +84,7 @@ window.resetModalLoginForm = function() {
 };
 
 document.addEventListener('DOMContentLoaded', function(){
-    // Clear any browser-prefilled default values on load
     window.resetModalLoginForm();
-    setTimeout(window.resetModalLoginForm, 150);
 
     const toggle = document.getElementById('toggleModalPassword');
     const pwd = document.getElementById('login-password');

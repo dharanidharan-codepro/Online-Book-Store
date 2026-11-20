@@ -69,8 +69,8 @@ document.addEventListener('DOMContentLoaded', function () {
           }
           const u = document.getElementById('login-username');
           const p = document.getElementById('login-password');
-          if (u) { u.value = ''; u.removeAttribute('readonly'); }
-          if (p) { p.value = ''; p.removeAttribute('readonly'); }
+          if (u) { u.value = ''; }
+          if (p) { p.value = ''; }
           const alertBox = document.getElementById('modalLoginAlert');
           if (alertBox) {
               alertBox.className = 'alert d-none py-2 px-3 mb-3 small';
@@ -93,19 +93,22 @@ document.addEventListener('DOMContentLoaded', function () {
               signInModal.classList.add('open');
               signInModal.setAttribute('aria-hidden', 'false');
               
-              // Clear again after modal transition to defeat asynchronous browser autofill
+              // Focus username field after modal animation
               setTimeout(function () {
-                  clearSignInModalForm();
                   const u = document.getElementById('login-username');
                   if (u) {
                       u.focus();
                   }
-              }, 60);
-              setTimeout(function () {
-                  clearSignInModalForm();
-              }, 180);
+              }, 80);
           });
       });
+
+      const modalDialog = signInModal.querySelector('.modal-dialog');
+      if (modalDialog) {
+          modalDialog.addEventListener('click', function (e) {
+              e.stopPropagation();
+          });
+      }
 
       const closeBtn = signInModal.querySelector('.modal-close');
       if (closeBtn) closeBtn.addEventListener('click', closeSignInModal);
