@@ -37,7 +37,7 @@
             </div>
         {% endif %}
 
-        <form method="post" class="auth-form" autocomplete="on">
+        <form method="post" class="auth-form" autocomplete="off">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ next|default:'/' }}">
 
@@ -50,10 +50,10 @@
                        id="id_username"
                        class="auth-input {% if form.username.errors %}is-invalid{% endif %}"
                        placeholder="Enter your username"
-                       value="{% if form.username.value %}{{ form.username.value }}{% elif attempted_username %}{{ attempted_username }}{% endif %}"
+                       value="{% if form.errors and form.username.value %}{{ form.username.value }}{% endif %}"
                        required
                        autofocus
-                       autocomplete="username">
+                       autocomplete="off">
                 {% if form.username.errors %}
                     <div class="auth-field-error">{{ form.username.errors.0 }}</div>
                 {% endif %}
@@ -70,7 +70,7 @@
                            class="auth-input {% if form.password.errors %}is-invalid{% endif %}"
                            placeholder="Enter your password"
                            required
-                           autocomplete="current-password"
+                           autocomplete="new-password"
                            style="padding-right: 42px;">
                     <button type="button" 
                             class="btn position-absolute end-0 top-50 translate-middle-y text-muted border-0 bg-transparent py-0 px-3" 

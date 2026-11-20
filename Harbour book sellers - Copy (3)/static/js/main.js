@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
   }
 
-  const signInTrigger = document.querySelector('.sign-in-trigger');
+  const signInTriggers = document.querySelectorAll('.sign-in-trigger');
   const signInModal = document.getElementById('signInModal');
   document.querySelectorAll('.chip-row input[type="radio"]').forEach(function (radio) {
       radio.addEventListener('change', function () {
@@ -58,19 +58,64 @@ document.addEventListener('DOMContentLoaded', function () {
           });
       });
   });
-  if (signInTrigger && signInModal) {
+
+  function clearSignInModalForm() {
+      if (typeof window.resetModalLoginForm === 'function') {
+          window.resetModalLoginForm();
+      } else {
+          const form = document.getElementById('modalLoginForm');
+          if (form) {
+              try { form.reset(); } catch(e) {}
+          }
+          const u = document.getElementById('login-username');
+          const p = document.getElementById('login-password');
+          if (u) { u.value = ''; u.removeAttribute('readonly'); }
+          if (p) { p.value = ''; p.removeAttribute('readonly'); }
+          const alertBox = document.getElementById('modalLoginAlert');
+          if (alertBox) {
+              alertBox.className = 'alert d-none py-2 px-3 mb-3 small';
+              alertBox.textContent = '';
+          }
+      }
+  }
+
+  if (signInModal) {
       const closeSignInModal = function () {
           signInModal.classList.remove('open');
           signInModal.setAttribute('aria-hidden', 'true');
+          clearSignInModalForm();
       };
-      signInTrigger.addEventListener('click', function () {
-          signInModal.classList.add('open');
-          signInModal.setAttribute('aria-hidden', 'false');
+
+      signInTriggers.forEach(function (trigger) {
+          trigger.addEventListener('click', function (e) {
+              e.preventDefault();
+              clearSignInModalForm();
+              signInModal.classList.add('open');
+              signInModal.setAttribute('aria-hidden', 'false');
+              
+              // Clear again after modal transition to defeat asynchronous browser autofill
+              setTimeout(function () {
+                  clearSignInModalForm();
+                  const u = document.getElementById('login-username');
+                  if (u) {
+                      u.focus();
+                  }
+              }, 60);
+              setTimeout(function () {
+                  clearSignInModalForm();
+              }, 180);
+          });
       });
+
       const closeBtn = signInModal.querySelector('.modal-close');
       if (closeBtn) closeBtn.addEventListener('click', closeSignInModal);
       signInModal.addEventListener('click', function (event) {
           if (event.target === signInModal) closeSignInModal();
+      });
+      document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && signInModal.classList.contains('open')) {
+              closeSignInModal();
+          }
       });
   }
 
